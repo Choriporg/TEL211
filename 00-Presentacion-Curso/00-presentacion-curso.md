@@ -25,8 +25,6 @@ style: |
 Patricio Olivares R.  
 Universidad Técnica Federico Santa María
 
-<div class="small">TIC: Tecnologías de la Información y la Comunicación.</div>
-
 ---
 
 ## Objetivo de TEL211
