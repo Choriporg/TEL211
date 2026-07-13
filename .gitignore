@@ -1,0 +1,20 @@
+# Codex y agentes de IA
+.codex/
+.agents/
+.claude/
+.cursor/
+.aider*
+AGENTS.md
+CLAUDE.md
+codex-*.md
+agents-*.md
+
+# Material auxiliar generado
+**/guia-estudio.md
+**/guia-estudio.pdf
+/FUENTES_Y_COBERTURA.md
+
+# Complementos fuera del contenido de clases
+**/complementos/
+**/Complementos/
+**/*Complementos*/
