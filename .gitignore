@@ -12,6 +12,7 @@ agents-*.md
 # Material auxiliar generado
 **/guia-estudio.md
 **/guia-estudio.pdf
+**/*.drawio
 /FUENTES_Y_COBERTURA.md
 
 # Complementos fuera del contenido de clases
