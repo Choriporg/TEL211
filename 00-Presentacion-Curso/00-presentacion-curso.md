@@ -29,7 +29,7 @@ Universidad Técnica Federico Santa María
 
 ## Objetivo de TEL211
 
-Cuando se diseña u opera un servicio de tecnologías de la información y la comunicación (TIC) no basta con preguntar si sus componentes son buenos.
+Al diseñar u operar un servicio de tecnologías de la información y la comunicación (TIC), la calidad de los componentes es solo una parte del problema.
 
 <div class="callout">
 ¿Cómo justificar, con modelos cuantitativos, que un servicio será suficientemente disponible y responderá con el rendimiento exigido?
@@ -75,6 +75,13 @@ Para ello se aprenderá a elegir la métrica correcta, formular el modelo, calcu
 ## Ejemplo: servicio de pagos
 
 Una interfaz de programación de aplicaciones (API) de pagos depende de dos instancias de aplicación, una base de datos y un enlace de red.
+
+En confiabilidad, una misión es el intervalo en que se exige que el sistema funcione sin fallar.
+
+---
+
+## Ejemplo: servicio de pagos
+
 
 | Pregunta de ingeniería | Herramienta que entregará el curso |
 |---|---|
@@ -181,7 +188,7 @@ Los certámenes evalúan la capacidad de resolver problemas en tiempo acotado.
 Las tareas permiten desarrollar problemas con más contexto.
 
 - Pueden incluir análisis escrito, desarrollo matemático y apoyo computacional.
-- Deben mostrar el razonamiento, no solo el resultado final.
+- Deben mostrar el razonamiento y el resultado final.
 - El código puede verificar un cálculo, pero no reemplaza la formulación ni la interpretación.
 
 ---
