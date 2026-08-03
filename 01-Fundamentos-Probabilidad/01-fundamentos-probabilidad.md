@@ -39,7 +39,7 @@ Esta clase repasa distribuciones que se usarán para modelar fallas, reparacione
 6. Selección del modelo según la pregunta y sus supuestos.
 
 <div class="bridge">
-El objetivo no es memorizar una lista de fórmulas. El objetivo es reconocer qué distribución corresponde a cada situación.
+El objetivo es reconocer qué distribución corresponde a cada situación.
 </div>
 
 ---
