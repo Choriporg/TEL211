@@ -520,6 +520,13 @@ La siguiente clase transforma el tiempo aleatorio $T$ en confiabilidad, riesgo y
 
 ---
 
+## Encuesta horario de ayudantía
+
+<img class="diagram" src="images/qr-code.svg" alt="Qr a la encuesta del horario de ayudantía.">
+
+
+---
+
 ## Referencias
 
 - K. S. Trivedi y A. Bobbio, *Reliability and Availability Engineering: Modeling, Analysis, and Applications*, Cambridge University Press, 2017, secs. 3.1-3.3.
