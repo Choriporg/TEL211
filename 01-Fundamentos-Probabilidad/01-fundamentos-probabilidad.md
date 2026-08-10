@@ -355,13 +355,7 @@ $$
 R(t)=P(T>t)=e^{-(t/\eta)^\beta}
 $$
 
-$$
-h(t)=\frac{\beta}{\eta}
-\left(\frac{t}{\eta}\right)^{\beta-1}
-$$
-
 - $R(t)$ es la probabilidad de sobrevivir más allá de $t$.
-- $h(t)$ es el riesgo instantáneo de falla.
 
 ---
 

@@ -407,183 +407,159 @@ El riesgo aumenta con la edad porque $\beta>1$.
 
 ## Tiempo medio hasta la falla (MTTF)
 
-MTTF proviene de *Mean Time To Failure* y representa la vida esperada de una unidad no reparable.
-
-Para una variable no negativa:
+MTTF proviene de *Mean Time To Failure*: la vida media esperada antes de la **primera falla** de una unidad no reparable.
 
 $$
-\mathrm{MTTF}=E[T]
-=\int_0^\infty t f(t)\,dt
-=\int_0^\infty R(t)\,dt
+\mathrm{MTTF}=E[T]=\int_0^\infty R(t)\,dt
 $$
 
-Casos importantes:
+| Modelo | MTTF |
+|---|---|
+| Exponencial | $\dfrac{1}{\lambda}$ |
+| Weibull | $\eta\,\Gamma\!\left(1+\dfrac{1}{\beta}\right)$ |
 
-$$
-\mathrm{MTTF}_{\mathrm{Exponencial}}=\frac{1}{\lambda}
-$$
+<div class="callout">
+MTTF es un <strong>promedio de muchas unidades</strong>, no una garantía ni un tiempo de misión. Para responder si una misión se completa, se usa $R(t)$.
+</div>
 
-$$
-\mathrm{MTTF}_{\mathrm{Weibull}}
-=\eta\,\Gamma\!\left(1+\frac{1}{\beta}\right)
-$$
+Para el router anterior, $\lambda=2\times10^{-5}\ \mathrm h^{-1}$ implica $\mathrm{MTTF}=50\,000\ \mathrm h$; aun así, $R(50\,000)=e^{-1}\approx0.368$.
 
 ---
 
-## Derivación visual de $E[T]=\int R(t)\,dt$
+## MTTF: el área bajo la confiabilidad
 
-Para $T\ge0$ puede escribirse:
+<div class="columns">
+<div>
 
-$$
-T=\int_0^\infty \mathbf 1_{\{T>t\}}\,dt
-$$
+<img class="diagram" src="images/mttf-area.svg" alt="Área bajo una curva de confiabilidad R(t), igual al MTTF">
 
-$$
-\mathbf 1_{\{T>t\}}=
-\begin{cases}
-1, & \text{si el componente sigue vivo en }t,\\
-0, & \text{si ya fall\'o antes de }t.
-\end{cases}
-$$
+</div>
+<div>
 
-La integral suma todos los instantes en que el componente sigue vivo. Por eso recupera el tiempo de vida $T$.
-
----
-
-## Derivación visual de $E[T]=\int R(t)\,dt$
-
-Tomando esperanza:
+En un intervalo pequeño $dt$:
 
 $$
-E[T]=\int_0^\infty E\!\left[\mathbf 1_{\{T>t\}}\right]dt
-=\int_0^\infty P(T>t)\,dt
-=\int_0^\infty R(t)\,dt
+R(t)\,dt
 $$
 
-Como el valor esperado de una indicadora es la probabilidad del evento, aparece $P(T>t)=R(t)$.
+es la contribución esperada de vida durante ese intervalo.
+
+Al sumar todos los intervalos:
+
+$$
+\boxed{\mathrm{MTTF}=\int_0^\infty R(t)\,dt}
+$$
+
+<div class="bridge">
+$h(t)$ define $R(t)$; el área bajo $R(t)$ entrega la vida media.
+</div>
+
+</div>
+</div>
 
 ---
 
 ## Confiabilidad no es disponibilidad
 
-| Métrica | Evento | ¿Incluye reparación? |
+| Métrica | Pregunta que responde | ¿La reparación importa? |
 |---|---|---|
-| $R(t)$ | no fallar durante $(0,t]$ | no durante la misión |
-| $A(t)$ | estar operativo en el instante $t$ | sí |
-| $A_\infty$ | fracción operacional a largo plazo | sí |
+| $R(t)$ | ¿completa la misión sin fallar? | no durante la misión |
+| $A(t)$ | ¿está operativo en el instante $t$? | sí |
+| $A_\infty$ | ¿qué fracción de largo plazo opera? | sí |
 
-Un servicio reparable puede experimentar varias fallas y mantener alta disponibilidad si sus reparaciones son rápidas.
+Ejemplo: una API se detiene $10\ \mathrm{min}$ y se recupera automáticamente durante un mes de $720\ \mathrm h$:
+
+$$
+A_{\mathrm{obs}}=\frac{720-1/6}{720}\approx0.9998
+$$
+
+Su disponibilidad observada es cercana a $99.98\%$, pero **no completó** una misión de un mes sin interrupciones.
 
 <div class="bridge">
-La reparación se modelará explícitamente con una cadena de Markov en tiempo continuo (CTMC). No debe introducirse dentro de $R(t)$ sin redefinir la métrica.
+La métrica depende de la pregunta operacional. La reparación se modelará explícitamente con CTMC; no debe introducirse dentro de $R(t)$ sin redefinir la misión.
 </div>
 
 ---
 
-## Estimación a partir de datos de falla
+## De datos de falla a confiabilidad
 
-En la práctica, la tasa de falla $\lambda$ normalmente no se conoce.
+Para calcular $R(t)$ en una misión, primero se debe estimar la tasa de falla a partir de una flota o prueba comparable.
 
-Para estimarla, se observan $n$ componentes similares y se registra cuánto tiempo funciona cada uno antes de fallar:
+Sea:
+
+| Dato | Significado |
+|---|---|
+| $d$ | número de fallas observadas |
+| $\tau$ | tiempo total observado de funcionamiento |
+
+Si el riesgo es aproximadamente constante:
 
 $$
-t_1,t_2,\ldots,t_n
+\widehat{\lambda}=\frac{d}{\tau}
 $$
 
-Si se supone un modelo exponencial:
-
-$$
-\widehat{\lambda}
-=
-\frac{\text{fallas observadas}}
-{\text{tiempo total de funcionamiento}}
-=
-\frac{n}{\sum_{i=1}^{n}t_i}
-$$
-
-*El símbolo $\widehat{\ }$ indica que el valor fue estimado desde datos y aproxima un parámetro real desconocido.*
+El sombrero indica que el parámetro proviene de datos: es una estimación, no una certeza.
 
 ---
 
-## Estimación del MTTF
+## De una tasa estimada a una decisión
 
-Para el modelo exponencial:
-
-$$
-\mathrm{MTTF}=\frac{1}{\lambda}
-$$
-
-Por lo tanto:
-
-$$
-\widehat{\mathrm{MTTF}}
-=
-\frac{1}{\widehat{\lambda}}
-=
-\frac{\sum_{i=1}^{n}t_i}{n}
-$$
-
-Así, cuando todos los componentes fueron observados hasta fallar:
+Bajo el modelo exponencial, los mismos datos permiten estimar la vida media y la confiabilidad de una misión:
 
 $$
 \boxed{
-\widehat{\mathrm{MTTF}}
-=
-\text{promedio de los tiempos de falla observados}
+\widehat{\lambda}=\frac{d}{\tau}
+\quad\Longrightarrow\quad
+\widehat{\mathrm{MTTF}}=\frac{1}{\widehat{\lambda}}=\frac{\tau}{d}
+\quad\Longrightarrow\quad
+\widehat{R}(t)=e^{-\widehat{\lambda}t}
 }
 $$
 
-La tasa estimada y el MTTF estimado resumen empíricamente los tiempos de vida registrados.
+<div class="callout">
+Los datos no solo resumen fallas pasadas: permiten estimar la probabilidad de completar una misión futura de duración $t$.
+</div>
 
 ---
 
-## Ejemplo: estimación desde una muestra
+## Ejemplo: prueba de módulos con censura
 
-Cinco componentes fallaron después de:
+Se observan cinco módulos de alimentación de routers:
 
-$$
-800,\ 1000,\ 1200,\ 900,\ 1100\ \mathrm h
-$$
+| Módulo | Resultado al cierre | Tiempo observado |
+|---|---|---:|
+| A | falló | $800\ \mathrm h$ |
+| B | falló | $1000\ \mathrm h$ |
+| C | falló | $1200\ \mathrm h$ |
+| D | seguía operando | $1000\ \mathrm h$ |
+| E | seguía operando | $1000\ \mathrm h$ |
 
-El tiempo total de funcionamiento fue:
-
-$$
-\sum_{i=1}^{5}t_i=5000\ \mathrm h
-$$
-
-Entonces:
+Hay $d=3$ fallas y $\tau=5000\ \mathrm h$ de exposición total:
 
 $$
-\widehat{\lambda}
-=
-\frac{5}{5000}
-=
-0.001\ \mathrm h^{-1}
+\widehat{\lambda}=\frac{3}{5000}=6\times10^{-4}\ \mathrm h^{-1},
+\qquad
+\widehat{\mathrm{MTTF}}\approx1667\ \mathrm h
 $$
 
-$$
-\widehat{\mathrm{MTTF}}
-=
-\frac{1}{\widehat{\lambda}}
-=
-1000\ \mathrm h
-$$
+Para una misión de $500\ \mathrm h$:
 
-*A partir de la muestra, se estima una vida media de $1000\ \mathrm h$ bajo el modelo exponencial.*
+$$
+\widehat{R}(500)=e^{-(6\times10^{-4})(500)}\approx0.7408
+$$
 
 ---
 
 ## Antes de estimar: condiciones y cautelas
 
-Las expresiones anteriores suponen que:
+Antes de usar $\widehat{R}(t)$ para decidir, pregunte:
 
-- los componentes son comparables
-- operan bajo condiciones similares
-- sus tiempos de vida son independientes
-- la tasa de falla es aproximadamente constante
-- todos fueron observados hasta fallar.
+- ¿Los componentes y sus condiciones de operación son comparables?
+- ¿La tasa de falla es aproximadamente constante en la ventana de interés?
+- ¿El tiempo total $\tau$ incorpora todas las unidades observadas?
+- ¿La misión y el evento de falla están definidos antes de calcular $R(t)$?
 
-Si algunas unidades aún funcionan al terminar el estudio, existen **datos censurados**.
+Las unidades que siguen funcionando al cierre aportan tiempo a $\tau$: son **datos censurados**, no datos que se deban descartar.
 
 $$
 \widehat{\lambda}
@@ -593,23 +569,25 @@ $$
 $$
 
 <div class="warn">
-Los componentes que no han fallado también aportan información mediante el tiempo que permanecieron funcionando.
+Estimar una tasa no demuestra que la Exponencial sea apropiada. Si el riesgo cambia con la edad, debe evaluarse un modelo como Weibull.
 </div>
 
 ---
 
-## Ejemplo
+## Ejemplo integrado: misión de un módulo
 
-Un módulo tiene vida exponencial con media $4000\ \mathrm h$.
+Un módulo de alimentación tiene vida exponencial con $\mathrm{MTTF}=4000\ \mathrm h$. Durante una actualización de $1500\ \mathrm h$ no habrá reemplazo ni reparación.
 
-1. Determine $\lambda$.
-2. Calcule $R(1000)$.
-3. Calcule $P(1000<T\le1500)$.
-4. Dado que sobrevivió $1000\ \mathrm h$, calcule la probabilidad de que sobreviva hasta $1500\ \mathrm h$.
+El equipo de operación necesita responder:
+
+1. ¿Cuál es la tasa de falla asumida?
+2. ¿Qué probabilidad hay de completar las primeras $1000\ \mathrm h$?
+3. ¿Qué probabilidad hay de fallar entre $1000$ y $1500\ \mathrm h$?
+4. Si ya sobrevivió $1000\ \mathrm h$, ¿qué probabilidad tiene de completar las $500\ \mathrm h$ restantes?
 
 ---
 
-## Solución: modelo e intervalo
+## Solución: de MTTF a confiabilidad
 
 $$
 \lambda=\frac{1}{4000}=2.5\times10^{-4}\ \mathrm h^{-1}
@@ -618,6 +596,14 @@ $$
 $$
 R(1000)=e^{-1000/4000}=e^{-0.25}\approx0.7788
 $$
+
+La misión de $1000\ \mathrm h$ se completa en aproximadamente $779$ de cada $1000$ módulos equivalentes bajo este modelo.
+
+---
+
+## Solución: probabilidad desde el inicio
+
+Antes de condicionar, se consideran todos los módulos que partieron al inicio:
 
 $$
 \begin{aligned}
@@ -629,9 +615,13 @@ P(1000<T\le1500)
 \end{aligned}
 $$
 
+Esta es la probabilidad de fallar en ese intervalo entre todos los módulos que comenzaron la misión.
+
 ---
 
 ## Solución: probabilidad condicional
+
+Si el módulo ya llegó funcionando a $1000\ \mathrm h$, la pregunta cambia:
 
 $$
 \begin{aligned}
@@ -643,51 +633,59 @@ P(T>1500\mid T>1000)
 \end{aligned}
 $$
 
-La simplificación depende de la falta de memoria de la distribución exponencial.
+<div class="callout">
+$0.0915$ es una probabilidad desde el inicio. $0.8825$ es la probabilidad de completar $500\ \mathrm h$ adicionales <strong>entre los supervivientes a $1000\ \mathrm h$</strong>. La simplificación depende de la falta de memoria Exponencial.
+</div>
 
 ---
 
-## Errores frecuentes
+## Checklist para interpretar un resultado
 
-| Error | Corrección |
+| Antes de reportar | Comprobación |
 |---|---|
-| Interpretar $h(t)$ como probabilidad | Es una tasa. Use un intervalo pequeño para aproximar probabilidad |
-| Usar $1/\lambda$ sin revisar unidades | Si $\lambda$ está en $\mathrm h^{-1}$, la media queda en $\mathrm h$ |
-| Asumir Exponencial por conveniencia | Justifique tasa aproximadamente constante |
-| Confundir $P(T>t)$ con $P(T\le t)$ | Son $R(t)$ y $F(t)=1-R(t)$ |
-| Confundir MTTF con una garantía | Es un promedio, no un mínimo |
+| Evento y misión | ¿Qué significa falla y cuánto dura $t$? |
+| Modelo | ¿$h(t)$ es aproximadamente constante o cambia con la edad? |
+| Probabilidad | $R(t)=P(T>t)$ y $F(t)=1-R(t)$ responden preguntas complementarias |
+| Unidades | Si $\lambda$ está en $\mathrm h^{-1}$, entonces $\lambda t$ no tiene unidades |
+| Vida media | MTTF es un promedio, no una garantía de duración |
+| Reparación | Si hay recuperación, ¿corresponde $R(t)$ o disponibilidad? |
 
 ---
 
-## Puente hacia la arquitectura
+## De un componente a un servicio
 
-Hasta ahora se modeló **un componente**. Un servicio real depende de varios.
+Hasta ahora se modeló un componente. Para obtener $R_{\mathrm{sistema}}(t)$ también se necesita saber cómo se conectan los componentes.
 
-<img class="diagram" src="images/serie-paralelo.png" alt="Comparación de componentes conectados en serie y en paralelo">
+<img class="diagram" src="images/componente-a-servicio.svg" alt="Comparación entre una arquitectura serie, donde A y B deben funcionar, y una arquitectura en paralelo, donde basta que funcione A o B">
 
 ---
 
-## Puente hacia la arquitectura
+## Misma confiabilidad, diseños distintos
 
-La siguiente clase responderá:
+Si dos componentes independientes tienen $R_1(t)=R_2(t)=0.9$:
 
 $$
-R_1(t),\ldots,R_n(t)
-\quad\Longrightarrow\quad
-R_{\mathrm{sistema}}(t)
+\begin{aligned}
+R_{\mathrm{serie}}(t)&=0.9\times0.9=0.81,\\
+R_{\mathrm{paralelo}}(t)&=1-(1-0.9)^2=0.99.
+\end{aligned}
 $$
 
+La misma confiabilidad individual puede producir servicios muy distintos. La siguiente clase generaliza este cálculo a arquitecturas serie, paralelo y $k$-de-$n$.
+
+<div class="bridge">
 El notebook `codigo/reliability_models.ipynb` permite variar tasas, Weibull y configuraciones $k$-de-$n$.
+</div>
 
 ---
 
-## Cierre
+## Cierre: una ruta para analizar confiabilidad
 
-- $R(t)$ cuantifica la supervivencia de una misión definida.
-- $F(t)$, $f(t)$, $R(t)$ y $h(t)$ son representaciones coherentes de $T$.
-- Exponencial implica riesgo constante. Weibull permite riesgo variable.
-- $\mathrm{MTTF}=\int_0^\infty R(t)\,dt$.
-- Confiabilidad y disponibilidad no son intercambiables.
+1. Defina la falla y el tiempo de misión.
+2. Describa el riesgo $h(t)$ y elija un modelo defendible: Exponencial o Weibull.
+3. Obtenga $R(t)$ para responder si la misión se completa y use el área bajo $R(t)$ para interpretar MTTF.
+4. No confunda una misión sin fallas con disponibilidad de un servicio reparable.
+5. Para un servicio, combine las confiabilidades según su arquitectura.
 
 ---
 
