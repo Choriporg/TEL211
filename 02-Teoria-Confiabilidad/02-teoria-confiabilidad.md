@@ -3,20 +3,40 @@ marp: true
 math: mathjax
 paginate: true
 style: |
-  section { font-size: 27px; line-height: 1.35; }
-  section.lead { text-align: center; }
-  section.lead h1 { font-size: 2.1em; }
-  h2, h3 { color: #12394f; }
-  code { font-size: 0.84em; }
-  pre { border-left: 5px solid #2f6f9f; padding: 0.75em; }
-  table { font-size: 0.77em; }
-  .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
-  .callout { background: #eef6fb; border-left: 6px solid #2f6f9f; border-radius: 6px; padding: 0.7em 0.9em; }
-  .bridge { background: #f7f8fa; border-left: 6px solid #6b7280; border-radius: 6px; padding: 0.65em 0.9em; }
-  .warn { background: #fff4df; border-left: 6px solid #b7791f; border-radius: 6px; padding: 0.65em 0.9em; }
-  .example-space { background: #eef8f1; border-left: 6px solid #2f855a; border-radius: 6px; padding: 0.65em 0.9em; }
-  .small { font-size: 0.82em; }
-  img.diagram { display: block; margin: 0 auto; max-height: 430px; max-width: 100%; }
+  section { font-size: 27px }
+  section { line-height: 1.35 }
+  section.lead { text-align: center }
+  section.lead h1 { font-size: 2.1em }
+  h2, h3 { color: #12394f }
+  code { font-size: 0.84em }
+  pre { border-left: 5px solid #2f6f9f }
+  pre { padding: 0.75em }
+  table { font-size: 0.77em }
+  .columns { display: grid }
+  .columns { grid-template-columns: 1fr 1fr }
+  .columns { gap: 32px }
+  .columns { align-items: start }
+  .callout { background: #eef6fb }
+  .callout { border-left: 6px solid #2f6f9f }
+  .callout { border-radius: 6px }
+  .callout { padding: 0.7em 0.9em }
+  .bridge { background: #f7f8fa }
+  .bridge { border-left: 6px solid #6b7280 }
+  .bridge { border-radius: 6px }
+  .bridge { padding: 0.65em 0.9em }
+  .warn { background: #fff4df }
+  .warn { border-left: 6px solid #b7791f }
+  .warn { border-radius: 6px }
+  .warn { padding: 0.65em 0.9em }
+  .example-space { background: #eef8f1 }
+  .example-space { border-left: 6px solid #2f855a }
+  .example-space { border-radius: 6px }
+  .example-space { padding: 0.65em 0.9em }
+  .small { font-size: 0.82em }
+  img.diagram { display: block }
+  img.diagram { margin: 0 auto }
+  img.diagram { max-height: 430px }
+  img.diagram { max-width: 100% }
 ---
 <!-- _class: lead -->
 
@@ -365,11 +385,11 @@ Cuando $\beta=1$, Weibull se reduce a una Exponencial con $\lambda=1/\eta$.
 </div>
 <div>
 
-| Weibull | Comportamiento de $h(t)$ | Lectura |
+| Weibull | Comportamiento de h(t) | Lectura |
 |---|---|---|
-| $0<\beta<1$ | decreciente | fallas tempranas |
-| $\beta=1$ | aproximadamente constante | caso exponencial |
-| $\beta>1$ | creciente | desgaste |
+| 0 < β < 1 | decreciente | fallas tempranas |
+| β = 1 | aproximadamente constante | caso exponencial |
+| β > 1 | creciente | desgaste |
 
 <div class="bridge">
 La distribución se elige por el mecanismo de falla y la evidencia disponible, no por comodidad algebraica.
@@ -410,19 +430,29 @@ El riesgo aumenta con la edad porque $\beta>1$.
 MTTF proviene de *Mean Time To Failure*: la vida media esperada antes de la **primera falla** de una unidad no reparable.
 
 $$
-\mathrm{MTTF}=E[T]=\int_0^\infty R(t)\,dt
+\mathrm{MTTF}=E[T]
+=\int_0^\infty t\,f(t)\,dt
+=\int_0^\infty R(t)\,dt
 $$
+
+La primera forma promedia los tiempos de falla usando $f(t)$. Como $f(t)=-R'(t)$, una integración por partes la transforma en el área bajo $R(t)$.
+
+---
+
+## Tiempo medio hasta la falla (MTTF)
 
 | Modelo | MTTF |
 |---|---|
 | Exponencial | $\dfrac{1}{\lambda}$ |
 | Weibull | $\eta\,\Gamma\!\left(1+\dfrac{1}{\beta}\right)$ |
 
+$\Gamma(\cdot)$ es la función Gamma. Extiende el factorial a valores no enteros. Para $n=1,2,\ldots$, $\Gamma(n)=(n-1)!$. En Weibull incorpora el efecto de la forma $\beta$ sobre la vida media.
+
 <div class="callout">
-MTTF es un <strong>promedio de muchas unidades</strong>, no una garantía ni un tiempo de misión. Para responder si una misión se completa, se usa $R(t)$.
+MTTF es un <strong>promedio de muchas unidades</strong>, no una garantía ni un tiempo de misión. Para responder si una misión se completa, se usa R(t).
 </div>
 
-Para el router anterior, $\lambda=2\times10^{-5}\ \mathrm h^{-1}$ implica $\mathrm{MTTF}=50\,000\ \mathrm h$; aun así, $R(50\,000)=e^{-1}\approx0.368$.
+Para el router anterior, $\lambda=2\times10^{-5}\ \mathrm h^{-1}$ implica $\mathrm{MTTF}=50\,000\ \mathrm h$. Sin embargo, $R(50\,000)=e^{-1}\approx0.368$.
 
 ---
 
@@ -436,26 +466,28 @@ Para el router anterior, $\lambda=2\times10^{-5}\ \mathrm h^{-1}$ implica $\math
 </div>
 <div>
 
-En un intervalo pequeño $dt$:
+En cada intervalo pequeño de tiempo, la confiabilidad representa la fracción esperada de unidades que sigue funcionando.
+
+La suma de esas contribuciones forma el área sombreada del diagrama.
+
+<div class="bridge">
+h(t) define R(t). El área bajo R(t) entrega la vida media.
+</div>
+
+</div>
+</div>
+
+En un intervalo pequeño de duración $dt$:
 
 $$
 R(t)\,dt
 $$
-
-es la contribución esperada de vida durante ese intervalo.
 
 Al sumar todos los intervalos:
 
 $$
 \boxed{\mathrm{MTTF}=\int_0^\infty R(t)\,dt}
 $$
-
-<div class="bridge">
-$h(t)$ define $R(t)$; el área bajo $R(t)$ entrega la vida media.
-</div>
-
-</div>
-</div>
 
 ---
 
@@ -467,6 +499,10 @@ $h(t)$ define $R(t)$; el área bajo $R(t)$ entrega la vida media.
 | $A(t)$ | ¿está operativo en el instante $t$? | sí |
 | $A_\infty$ | ¿qué fracción de largo plazo opera? | sí |
 
+---
+
+## Confiabilidad no es disponibilidad
+
 Ejemplo: una API se detiene $10\ \mathrm{min}$ y se recupera automáticamente durante un mes de $720\ \mathrm h$:
 
 $$
@@ -476,7 +512,7 @@ $$
 Su disponibilidad observada es cercana a $99.98\%$, pero **no completó** una misión de un mes sin interrupciones.
 
 <div class="bridge">
-La métrica depende de la pregunta operacional. La reparación se modelará explícitamente con CTMC; no debe introducirse dentro de $R(t)$ sin redefinir la misión.
+Una <strong>CMTC</strong> (cadena de Markov en tiempo continuo, <em>CTMC</em> en inglés) representa transiciones aleatorias entre estados como operativo y en reparación. Se usará para incorporar reparación de manera explícita. No debe introducirse dentro de R(t) sin redefinir la misión.
 </div>
 
 ---
@@ -517,7 +553,7 @@ $$
 $$
 
 <div class="callout">
-Los datos no solo resumen fallas pasadas: permiten estimar la probabilidad de completar una misión futura de duración $t$.
+Los datos no solo resumen fallas pasadas. También permiten estimar la probabilidad de completar una misión futura.
 </div>
 
 ---
@@ -634,7 +670,7 @@ P(T>1500\mid T>1000)
 $$
 
 <div class="callout">
-$0.0915$ es una probabilidad desde el inicio. $0.8825$ es la probabilidad de completar $500\ \mathrm h$ adicionales <strong>entre los supervivientes a $1000\ \mathrm h$</strong>. La simplificación depende de la falta de memoria Exponencial.
+0.0915 es una probabilidad desde el inicio. 0.8825 es la probabilidad de completar 500 horas adicionales <strong>entre los supervivientes a 1000 horas</strong>. La simplificación depende de la falta de memoria Exponencial.
 </div>
 
 ---
@@ -674,7 +710,7 @@ $$
 La misma confiabilidad individual puede producir servicios muy distintos. La siguiente clase generaliza este cálculo a arquitecturas serie, paralelo y $k$-de-$n$.
 
 <div class="bridge">
-El notebook `codigo/reliability_models.ipynb` permite variar tasas, Weibull y configuraciones $k$-de-$n$.
+El notebook `codigo/reliability_models.ipynb` permite variar tasas, Weibull y configuraciones k-de-n.
 </div>
 
 ---
