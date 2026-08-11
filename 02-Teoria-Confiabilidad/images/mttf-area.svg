@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img" aria-labelledby="title desc">
+  <title id="title">MTTF como área bajo la curva de confiabilidad</title>
+  <desc id="desc">Una curva de confiabilidad decreciente R de t. El área sombreada bajo la curva representa el MTTF.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#12394f"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="560" fill="#ffffff"/>
+  <path d="M110 95 C260 125 390 225 515 330 C650 420 755 458 900 475 L900 490 L110 490 Z" fill="#dcecf6"/>
+  <line x1="110" y1="490" x2="925" y2="490" stroke="#12394f" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="110" y1="490" x2="110" y2="54" stroke="#12394f" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M110 95 C260 125 390 225 515 330 C650 420 755 458 900 475" fill="none" stroke="#2f6f9f" stroke-width="10" stroke-linecap="round"/>
+  <line x1="110" y1="95" x2="900" y2="95" stroke="#93a8b7" stroke-width="2" stroke-dasharray="8 8"/>
+
+  <g font-family="Arial, Helvetica, sans-serif" fill="#12394f">
+    <text x="64" y="91" font-size="28" font-weight="700">1</text>
+    <text x="65" y="56" font-size="32" font-weight="700">R(t)</text>
+    <text x="930" y="531" font-size="32" font-weight="700">t</text>
+    <text x="468" y="330" font-size="34" font-weight="700" text-anchor="middle">Área = MTTF</text>
+    <text x="468" y="370" font-size="25" text-anchor="middle">vida esperada antes de la primera falla</text>
+    <text x="695" y="219" font-size="27" font-weight="700">confiabilidad</text>
+    <text x="695" y="250" font-size="23">probabilidad de</text>
+    <text x="695" y="278" font-size="23">seguir operando</text>
+  </g>
+</svg>

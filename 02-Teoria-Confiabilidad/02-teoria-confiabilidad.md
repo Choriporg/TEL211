@@ -477,6 +477,10 @@ h(t) define R(t). El área bajo R(t) entrega la vida media.
 </div>
 </div>
 
+---
+
+## MTTF: el área bajo la confiabilidad
+
 En un intervalo pequeño de duración $dt$:
 
 $$
@@ -623,55 +627,68 @@ El equipo de operación necesita responder:
 
 ---
 
-## Solución: de MTTF a confiabilidad
+## Solución
 
-$$
-\lambda=\frac{1}{4000}=2.5\times10^{-4}\ \mathrm h^{-1}
-$$
+1. **Tasa de falla asumida**
 
-$$
-R(1000)=e^{-1000/4000}=e^{-0.25}\approx0.7788
-$$
-
-La misión de $1000\ \mathrm h$ se completa en aproximadamente $779$ de cada $1000$ módulos equivalentes bajo este modelo.
+    $$
+    \lambda=\frac{1}{4000}=2.5\times10^{-4}\ \mathrm h^{-1}
+    $$
 
 ---
 
-## Solución: probabilidad desde el inicio
+## Solución
 
-Antes de condicionar, se consideran todos los módulos que partieron al inicio:
+2. **Probabilidad de completar las primeras $1000\ \mathrm h$**
 
-$$
-\begin{aligned}
-P(1000<T\le1500)
-&=F(1500)-F(1000)\\
-&=R(1000)-R(1500)\\
-&=e^{-0.25}-e^{-0.375}\\
-&\approx0.0915
-\end{aligned}
-$$
+    $$
+    R(1000)=e^{-1000/4000}=e^{-0.25}\approx0.7788
+    $$
 
-Esta es la probabilidad de fallar en ese intervalo entre todos los módulos que comenzaron la misión.
+    La misión de $1000\ \mathrm h$ se completa en aproximadamente $779$ de cada $1000$ módulos equivalentes bajo este modelo.
 
 ---
 
-## Solución: probabilidad condicional
+## Solución
 
-Si el módulo ya llegó funcionando a $1000\ \mathrm h$, la pregunta cambia:
+3. **Probabilidad de fallar entre $1000$ y $1500\ \mathrm h$**
 
-$$
-\begin{aligned}
-P(T>1500\mid T>1000)
-&=\frac{P(T>1500)}{P(T>1000)}\\
-&=\frac{e^{-1500/4000}}{e^{-1000/4000}}\\
-&=e^{-500/4000}\\
-&\approx0.8825
-\end{aligned}
-$$
+    Antes de condicionar, se consideran todos los módulos que partieron al inicio:
 
-<div class="callout">
-0.0915 es una probabilidad desde el inicio. 0.8825 es la probabilidad de completar 500 horas adicionales <strong>entre los supervivientes a 1000 horas</strong>. La simplificación depende de la falta de memoria Exponencial.
-</div>
+    $$
+    \begin{aligned}
+    P(1000<T\le1500)
+    &=F(1500)-F(1000)\\
+    &=R(1000)-R(1500)\\
+    &=e^{-0.25}-e^{-0.375}\\
+    &\approx0.0915
+    \end{aligned}
+    $$
+
+    Esta es la probabilidad de fallar en ese intervalo entre todos los módulos que comenzaron la misión.
+
+---
+
+## Solución
+
+
+4. **Probabilidad condicional de completar las $500\ \mathrm h$ restantes**
+
+    Recordar que $P(A\mid B)=P(A\cap B)/P(B)$.
+
+    $$
+    \begin{aligned}
+    P(T>1500\mid T>1000)
+    &=\frac{P(T>1500)}{P(T>1000)}\\
+    &=\frac{e^{-1500/4000}}{e^{-1000/4000}}\\
+    &=e^{-500/4000}\\
+    &\approx0.8825
+    \end{aligned}
+    $$
+
+    <div class="callout">
+    0.0915 es una probabilidad desde el inicio. 0.8825 es la probabilidad de completar 500 horas adicionales <strong>entre los supervivientes a 1000 horas</strong>. La simplificación depende de la falta de memoria Exponencial.
+    </div>
 
 ---
 
@@ -710,7 +727,7 @@ $$
 La misma confiabilidad individual puede producir servicios muy distintos. La siguiente clase generaliza este cálculo a arquitecturas serie, paralelo y $k$-de-$n$.
 
 <div class="bridge">
-El notebook `codigo/reliability_models.ipynb` permite variar tasas, Weibull y configuraciones k-de-n.
+El notebook codigo/reliability_models.ipynb permite variar tasas, Weibull y configuraciones k-de-n.
 </div>
 
 ---
