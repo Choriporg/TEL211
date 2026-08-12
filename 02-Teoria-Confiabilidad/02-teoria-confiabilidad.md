@@ -726,10 +726,6 @@ $$
 
 La misma confiabilidad individual puede producir servicios muy distintos. La siguiente clase generaliza este cálculo a arquitecturas serie, paralelo y $k$-de-$n$.
 
-<div class="bridge">
-El notebook codigo/reliability_models.ipynb permite variar tasas, Weibull y configuraciones k-de-n.
-</div>
-
 ---
 
 ## Cierre: una ruta para analizar confiabilidad
