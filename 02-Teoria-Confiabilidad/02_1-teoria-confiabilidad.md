@@ -692,18 +692,9 @@ El equipo de operación necesita responder:
 
 ---
 
-## Checklist para interpretar un resultado
-
-| Antes de reportar | Comprobación |
-|---|---|
-| Evento y misión | ¿Qué significa falla y cuánto dura $t$? |
-| Modelo | ¿$h(t)$ es aproximadamente constante o cambia con la edad? |
-| Probabilidad | $R(t)=P(T>t)$ y $F(t)=1-R(t)$ responden preguntas complementarias |
-| Unidades | Si $\lambda$ está en $\mathrm h^{-1}$, entonces $\lambda t$ no tiene unidades |
-| Vida media | MTTF es un promedio, no una garantía de duración |
-| Reparación | Si hay recuperación, ¿corresponde $R(t)$ o disponibilidad? |
-
----
+<!--
+Nota editorial temporal: este puente hacia arquitecturas se mantiene oculto
+mientras se reorganiza la secuencia posterior a la presentación 02.
 
 ## De un componente a un servicio
 
@@ -725,6 +716,7 @@ R_{\mathrm{paralelo}}(t)&=1-(1-0.9)^2=0.99.
 $$
 
 La misma confiabilidad individual puede producir servicios muy distintos. La siguiente clase generaliza este cálculo a arquitecturas serie, paralelo y $k$-de-$n$.
+-->
 
 ---
 
@@ -734,7 +726,7 @@ La misma confiabilidad individual puede producir servicios muy distintos. La sig
 2. Describa el riesgo $h(t)$ y elija un modelo defendible: Exponencial o Weibull.
 3. Obtenga $R(t)$ para responder si la misión se completa y use el área bajo $R(t)$ para interpretar MTTF.
 4. No confunda una misión sin fallas con disponibilidad de un servicio reparable.
-5. Para un servicio, combine las confiabilidades según su arquitectura.
+<!-- 5. Para un servicio, combine las confiabilidades según su arquitectura. -->
 
 ---
 
