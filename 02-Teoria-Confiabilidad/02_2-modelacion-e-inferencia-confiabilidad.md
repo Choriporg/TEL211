@@ -66,10 +66,6 @@ $$
 | Poisson y Exponencial | ¿Cuántos eventos ocurren y cuánto se espera hasta el siguiente? |
 | Variabilidad y Weibull | ¿El promedio y una tasa constante describen suficientemente los datos? |
 
-<div class="bridge">
-Las distribuciones adicionales se resumen al final de la presentación en un anexo, sin desarrollarlas en este bloque principal.
-</div>
-
 ---
 
 ## Conteos, tiempos y proceso de Poisson
@@ -192,7 +188,7 @@ $$
 | $s$ | desviación estándar muestral | tiempo |
 | $\widehat C_V$ | desviación estándar relativa al promedio | ninguna |
 
-El coeficiente de variación sirve para comparar muestras con escalas distintas. Un valor cercano a $1$ es compatible con la desviación estándar relativa de una Exponencial, aunque no demuestra que el modelo sea correcto.
+El coeficiente de variación sirve para comparar muestras con escalas distintas. Como regla orientativa, $0.8\leq\widehat C_V\leq1.2$ hace razonable considerar una Exponencial, pero no demuestra que el modelo sea correcto.
 
 ---
 
@@ -308,7 +304,7 @@ $$
 R(500)=e^{-(500/1000)^2}=e^{-0.25}\approx0.779
 $$
 
-La probabilidad de que el ventilador sobreviva una misión de $500\ \mathrm h$ es aproximadamente $77.9\%$. Como $\beta>1$, conviene evaluar reemplazo preventivo antes de que aumente el riesgo.
+La probabilidad de que el ventilador sobreviva una misión de $500\ \mathrm h$ es aproximadamente $77.9\%$. Como $\beta>1$, conviene evaluar reemplazo preventivo antes de que aumente el riesgo. Para definir cuándo hacerlo, es útil fijar una confiabilidad mínima aceptable $R_{\min}$. Su valor depende del problema, por ejemplo, de la criticidad de la falla y del costo del reemplazo.
 
 ---
 
@@ -351,41 +347,110 @@ El sombrero indica que el valor se estima a partir de una muestra.
 
 ---
 
-## Ejercicio integrado
+## Ejercicio
 
-Un servicio registra llegadas de alarmas a tasa constante $\nu=4\ \mathrm h^{-1}$. En una prueba independiente de componentes, se observan $d=5$ fallas durante $\tau=2500\ \mathrm h$.
+### 1. Alarmas
 
-1. Calcule la probabilidad de no recibir alarmas durante $15\ \mathrm{min}$.
-2. Calcule la probabilidad de que la próxima alarma tarde más de $15\ \mathrm{min}$.
-3. Estime la tasa de falla de un componente bajo modelo exponencial.
-4. Indique dos razones por las cuales esta tasa no basta, por sí sola, para decidir un reemplazo preventivo.
+Un servicio registra llegadas de alarmas a tasa constante $4\ \mathrm h^{-1}$. Responda las siguientes preguntas indicando qué distribución de probabilidad debe usar en cada caso.
 
-Antes de calcular, identifique qué pregunta usa Poisson y cuál usa Exponencial.
+1.1. Calcule la probabilidad de no recibir alarmas durante $15\ \mathrm{min}$.
+
+1.2. Calcule la probabilidad de que la próxima alarma tarde más de $15\ \mathrm{min}$.
+
+### 2. Fallas
+
+En una prueba independiente de componentes, se observan $d=10$ fallas durante $\tau=5000\ \mathrm h$.
+
+Los tiempos de falla observados son:
+
+| Componente | Tiempo de falla (h) | Componente | Tiempo de falla (h) |
+|---:|---:|---:|---:|
+| 1 | 20 | 6 | 500 |
+| 2 | 60 | 7 | 700 |
+| 3 | 100 | 8 | 950 |
+| 4 | 150 | 9 | 1100 |
+| 5 | 250 | 10 | 1170 |
+
+2.1. Estime la tasa de falla de un componente bajo modelo exponencial.
+
+2.2. Calcule $\widehat C_V$ a partir de la tabla. Para una misión de $500\ \mathrm h$, calcule la confiabilidad estimada. Justifique, usando $\widehat C_V$, si corresponde utilizar una distribución Exponencial o Weibull. Si selecciona Weibull, use el ajuste $\beta=2$ y $\eta=1000\ \mathrm h$.
+
+2.3. Se define una confiabilidad mínima aceptable de $75\%$. Bajo el modelo seleccionado, determine el tiempo en que debe programarse el reemplazo preventivo.
 
 ---
 
-## Solución e interpretación
+## Solución
+
+### Respuestas 1.1 y 1.2: alarmas
 
 Como $15\ \mathrm{min}=0.25\ \mathrm h$:
+
+**Respuesta 1.1.** Probabilidad de no recibir alarmas:
 
 $$
 P[N(0.25)=0]=e^{-(4)(0.25)}=e^{-1}\approx0.3679
 $$
 
+**Respuesta 1.2.** Probabilidad de que la próxima alarma tarde más de $15\ \mathrm{min}$:
+
 $$
 P(W>0.25)=e^{-(4)(0.25)}=e^{-1}\approx0.3679
 $$
 
-Para la prueba de componentes:
+---
+
+## Solución
+
+### Respuestas 2.1, 2.2 y 2.3: fallas
+
+**Respuesta 2.1.** Para la prueba de componentes:
 
 $$
-\widehat\lambda=\frac5{2500}=0.002\ \mathrm h^{-1}
+\widehat\lambda=\frac{10}{5000}=0.002\ \mathrm h^{-1}
 $$
 
-La tasa estimada no basta, por sí sola, para decidir un reemplazo preventivo. Al menos debemos revisar:
+---
 
-- Si la tasa es aproximadamente constante. Si existe desgaste, la Weibull puede ser más apropiada.
-- Si las condiciones de operación y el evento de falla son comparables. Además, la decisión depende del costo de reemplazar.
+## Solución
+
+### Respuestas 2.1, 2.2 y 2.3: fallas
+
+**Respuesta 2.2.** A partir de la tabla:
+
+$$
+\bar t=500\ \mathrm h,
+\qquad
+s=\sqrt{\frac{1820400}{9}}\approx449.7\ \mathrm h,
+\qquad
+\widehat C_V=\frac{449.7}{500}\approx0.90
+$$
+
+La distribución Exponencial predice $C_V=1$. Como $\widehat C_V\approx0.90$ es cercano a $1$, el supuesto de tasa constante resulta razonable y se utiliza una distribución Exponencial:
+
+$$
+\widehat R(500)=e^{-\widehat\lambda(500)}=e^{-(0.002)(500)}=e^{-1}\approx0.3679
+$$
+
+El coeficiente de variación orienta la selección del modelo, pero no demuestra por sí solo que la distribución Exponencial sea correcta.
+
+---
+
+## Solución
+
+### Respuestas 2.1, 2.2 y 2.3: fallas
+
+
+**Respuesta 2.3.** Bajo el modelo Exponencial, se busca el tiempo $t_p$ que satisface $R(t_p)=0.75$:
+
+$$
+0.75=e^{-\widehat\lambda t_p}
+\qquad\Longrightarrow\qquad
+t_p=\frac{-\ln(0.75)}{\widehat\lambda}
+=\frac{-\ln(0.75)}{0.002}
+\approx143.8\ \mathrm h
+$$
+
+El reemplazo preventivo debe programarse aproximadamente a las $144\ \mathrm h$.
 
 
 ---
