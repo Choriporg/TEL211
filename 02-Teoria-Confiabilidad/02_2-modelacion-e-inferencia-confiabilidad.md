@@ -16,6 +16,7 @@ style: |
   .warn { background: #fff4df; border-left: 6px solid #b7791f; border-radius: 6px; padding: 0.65em 0.9em; }
   .example-space { background: #eef8f1; border-left: 6px solid #2f855a; border-radius: 6px; padding: 0.65em 0.9em; }
   .small { font-size: 0.82em; }
+  img.component-service { display: block; margin: 0 auto; max-height: 390px; width: 90%; }
 ---
 <!-- _class: lead -->
 
@@ -403,7 +404,7 @@ La tasa estimada no basta, por sí sola, para decidir un reemplazo preventivo. A
 
 Hasta ahora se modeló un componente. Para obtener $R_{\mathrm{sistema}}(t)$ también se necesita saber cómo se conectan los componentes.
 
-<img class="diagram" src="images/componente-a-servicio.svg" alt="Comparación entre una arquitectura serie, donde A y B deben funcionar, y una arquitectura en paralelo, donde basta que funcione A o B">
+<img class="component-service" src="images/componente-a-servicio.svg" alt="Comparación entre una arquitectura serie, donde A y B deben funcionar, y una arquitectura en paralelo, donde basta que funcione A o B">
 
 ---
 

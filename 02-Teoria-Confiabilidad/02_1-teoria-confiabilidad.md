@@ -692,41 +692,12 @@ El equipo de operación necesita responder:
 
 ---
 
-<!--
-Nota editorial temporal: este puente hacia arquitecturas se mantiene oculto
-mientras se reorganiza la secuencia posterior a la presentación 02.
-
-## De un componente a un servicio
-
-Hasta ahora se modeló un componente. Para obtener $R_{\mathrm{sistema}}(t)$ también se necesita saber cómo se conectan los componentes.
-
-<img class="diagram" src="images/componente-a-servicio.svg" alt="Comparación entre una arquitectura serie, donde A y B deben funcionar, y una arquitectura en paralelo, donde basta que funcione A o B">
-
----
-
-## Misma confiabilidad, diseños distintos
-
-Si dos componentes independientes tienen $R_1(t)=R_2(t)=0.9$:
-
-$$
-\begin{aligned}
-R_{\mathrm{serie}}(t)&=0.9\times0.9=0.81,\\
-R_{\mathrm{paralelo}}(t)&=1-(1-0.9)^2=0.99.
-\end{aligned}
-$$
-
-La misma confiabilidad individual puede producir servicios muy distintos. La siguiente clase generaliza este cálculo a arquitecturas serie, paralelo y $k$-de-$n$.
--->
-
----
-
 ## Cierre: una ruta para analizar confiabilidad
 
 1. Defina la falla y el tiempo de misión.
 2. Describa el riesgo $h(t)$ y elija un modelo defendible: Exponencial o Weibull.
 3. Obtenga $R(t)$ para responder si la misión se completa y use el área bajo $R(t)$ para interpretar MTTF.
 4. No confunda una misión sin fallas con disponibilidad de un servicio reparable.
-<!-- 5. Para un servicio, combine las confiabilidades según su arquitectura. -->
 
 ---
 
