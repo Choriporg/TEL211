@@ -34,12 +34,11 @@ Universidad Técnica Federico Santa María
 
 Con los contenidos anteriores ya podemos definir una misión, elegir una distribución y calcular $R(t)$. El siguiente paso es evaluar qué tan bien se sostiene ese modelo cuando trabajamos con datos reales.
 
-Para ello, abordaremos cuatro preguntas:
+Para ello, abordaremos tres preguntas:
 
 1. ¿Cómo se relacionan los conteos de fallas con los tiempos entre fallas?
 2. ¿Qué desviación estándar tienen los tiempos hasta la falla y cómo se compara con su promedio?
 3. ¿Cómo reconocer una tasa de falla variable y revisar si Weibull es razonable?
-4. ¿Cómo cuantificamos la incertidumbre al estimar y demostrar confiabilidad?
 
 <div class="callout">
 El objetivo no es agregar una nueva métrica, sino fortalecer la justificación del modelo y de las decisiones que se toman con él.
@@ -56,7 +55,7 @@ $$
 \longrightarrow
 \text{distribuci\'on}
 \longrightarrow
-\text{par\'ametros e incertidumbre}
+\text{par\'ametros y supuestos}
 \longrightarrow
 \text{decisi\'on}
 $$
@@ -65,8 +64,6 @@ $$
 |---|---|
 | Poisson y Exponencial | ¿Cuántos eventos ocurren y cuánto se espera hasta el siguiente? |
 | Variabilidad y Weibull | ¿El promedio y una tasa constante describen suficientemente los datos? |
-| Inferencia y demostración | ¿Qué evidencia respalda una tasa estimada o una meta de confiabilidad? |
-| Estadísticos de orden | ¿Cómo se relacionan vidas individuales con una futura arquitectura? |
 
 <div class="bridge">
 Las distribuciones adicionales se resumen al final de la presentación en un anexo, sin desarrollarlas en este bloque principal.
@@ -348,274 +345,8 @@ $$
 $$
 
 <div class="bridge">
-El sombrero indica una estimación desde una muestra. No convierte el parámetro en una certeza.
+El sombrero indica que el valor se estima a partir de una muestra.
 </div>
-
----
-
-## Una estimación no es una certeza
-
-La estimación puntual resume los datos, pero su valor depende de cuánta evidencia se haya observado:
-
-$$
-\widehat\lambda=\frac d\tau,
-\qquad
-\widehat R(t)=e^{-\widehat\lambda t}
-$$
-
-Dos pruebas pueden entregar la misma tasa estimada:
-
-| | Prueba A | Prueba B |
-|---|---:|---:|
-| Fallas observadas $d$ | $1$ | $10$ |
-| Exposición total $\tau$ | $5000\ \mathrm h$ | $50000\ \mathrm h$ |
-| $\widehat\lambda=d/\tau$ | $0.0002\ \mathrm h^{-1}$ | $0.0002\ \mathrm h^{-1}$ |
-
----
-
-## Una estimación no es una certeza
-
-Para una misión de $300\ \mathrm h$, ambas entregan:
-
-$$
-\widehat R(300)=e^{-0.0002(300)}\approx0.942
-$$
-
-<div class="callout">
-Misma confiabilidad estimada no significa misma confianza.
-</div>
-
----
-
-## ¿Qué significa agregar confianza?
-
-$$
-\widehat R(300)=0.942
-$$
-
-Este es el mejor valor estimado a partir de la muestra. Pero una decisión de ingeniería suele requerir una afirmación más conservadora:
-
-$$
-R(300)\ge0.85
-\qquad\text{con confianza }CL=90\%
-$$
-
-- $\widehat R(t)$ es una estimación puntual.
-- $R_L(t)$ será una cota inferior de confianza.
-- La cota inferior es más conservadora que la estimación puntual.
-
-Aquí $CL$ es el nivel de confianza exigido. No describe una probabilidad adicional del producto, sino la evidencia requerida para sostener la afirmación.
-
-La pregunta es qué confiabilidad mínima podemos sostener con los datos disponibles. En confiabilidad, esta cota suele ser más útil que comunicar solo un valor estimado.
-
----
-
-## De la tasa estimada a una cota conservadora
-
-Bajo el modelo Exponencial, la tasa de falla es aproximadamente constante. Para $d$ fallas durante una exposición total $\tau$:
-
-$$
-\widehat\lambda=\frac d\tau
-$$
-
-Para construir una afirmación conservadora calculamos una cota superior para la tasa de falla:
-
-$$
-\boxed{
-\lambda_U=
-\frac{\chi^2_{2d+2,\,CL}}{2\tau}
-}
-$$
-
----
-
-## De la tasa estimada a una cota conservadora
-
-El término $2d+2$ proviene del conteo Poisson. Para obtener la cota superior se invierte la relación $P(D\le d\mid\lambda_U\tau)=1-CL$, que considera hasta $d$ fallas y no solo exactamente $d$. Esa inversión produce $d+1$ y la parametrización chi cuadrado duplica ese valor:
-
-$$
-r=2(d+1)=2d+2
-$$
-
----
-
-## De la cota a una decisión
-
-$\chi^2$ entrega un factor que depende del número de fallas observado y del nivel de confianza. Su valor se obtiene de una tabla, software o función estadística.
-
-Como una tasa mayor implica una confiabilidad menor:
-
-$$
-R(t)=e^{-\lambda t}
-\qquad\Longrightarrow\qquad
-\boxed{R_L(t)=e^{-\lambda_U t}}
-$$
-
-Por tanto, podemos afirmar:
-
-$$
-\boxed{R(t)\ge R_L(t)\quad\text{con confianza }CL}
-$$
-
-$$
-\text{datos}
-\longrightarrow
-\widehat\lambda
-\longrightarrow
-\lambda_U
-\longrightarrow
-R_L(t)
-\longrightarrow
-\text{decisión}
-$$
-
----
-
-## De confiabilidad estimada a confiabilidad respaldada
-
-Durante una prueba se observan $d=2$ fallas en $\tau=10000\ \mathrm h$. Para una misión de $t=300\ \mathrm h$:
-
-$$
-\begin{aligned}
-\widehat\lambda&=\frac{2}{10000}=0.0002\ \mathrm h^{-1}\\
-\widehat R(300)&=e^{-0.0002(300)}\approx0.942
-\end{aligned}
-$$
-
-Para $CL=90\%$, algunos valores de la tabla son. Si la tabla usa probabilidad de cola superior, se consulta la columna $1-CL=0.10$:
-
-| Grados de libertad $r$ | $q_{r,0.90}$ |
-|---:|---:|
-| $2$ | $4.605$ |
-| $4$ | $7.779$ |
-| $6$ | $10.645$ |
-
----
-
-## De confiabilidad estimada a confiabilidad respaldada
-
-Como $d=2$, usamos $r=2d+2=6$ y, por tanto, $q_{6,0.90}=10.645$:
-
-$$
-\begin{aligned}
-\lambda_U&=\frac{10.645}{2(10000)}\approx0.000532\ \mathrm h^{-1}\\
-R_L(300)&=e^{-0.000532(300)}\approx0.852
-\end{aligned}
-$$
-
-<div class="callout">
-Estimamos una confiabilidad de 94.2%, pero con la evidencia disponible podemos sostener una confiabilidad de al menos 85.2% con 90% de confianza.
-</div>
-
----
-
-## La cota también limita el MTTF
-
-La misma cota sobre $\lambda$ permite obtener una cota conservadora para el MTTF:
-
-$$
-\widehat{\mathrm{MTTF}}=\frac1{0.0002}=5000\ \mathrm h
-$$
-
-$$
-\mathrm{MTTF}_L=\frac1{\lambda_U}
-=\frac1{0.000532}\approx1879\ \mathrm h
-$$
-
-El MTTF estimado es $5000\ \mathrm h$. Con $90\%$ de confianza podemos sostener un MTTF de al menos aproximadamente $1879\ \mathrm h$.
-
----
-
-## La misma idea al revés: diseñar una prueba
-
-Hasta ahora preguntamos qué confiabilidad podemos sostener dado un ensayo. Ahora invertimos la pregunta: ¿cuánta evidencia necesitamos para demostrar una confiabilidad mínima?
-
-Si $d$ es el máximo de fallas aceptadas y $\tau$ es el tiempo total de prueba:
-
-$$
-R_L(t_D)\ge R_D
-$$
-
-Usando la misma cota de confianza:
-
-$$
-\boxed{
-\tau\ge
-\frac{t_D\,\chi^2_{2d+2,\,CL}}
-{2[-\ln(R_D)]}
-}
-$$
-
-<div class="bridge">
-La confianza se puede usar en dos direcciones: para evaluar datos disponibles o para planificar la evidencia necesaria.
-</div>
-
----
-
-## Ejemplo: planificar el tiempo de prueba
-
-Para $R_D=0.85$, $t_D=300\ \mathrm h$, $CL=90\%$ y $d=2$:
-
-$$
-\tau\ge
-\frac{300(10.645)}{2[-\ln(0.85)]}
-\approx9825\ \mathrm h
-$$
-
-La misma idea se usa en dos direcciones: los datos permiten calcular una cota de confianza y una meta de confiabilidad permite calcular la evidencia necesaria.
-
-<div class="warn">
-Estas cotas suponen una tasa de falla aproximadamente constante. Una cota estadística no corrige un modelo mal elegido. Si el riesgo cambia con la edad, corresponde revisar Weibull.
-</div>
-
----
-
-## Validar no es sólo revisar unidades
-
-Una validación mínima del modelo pregunta:
-
-- ¿las condiciones de operación y el evento de falla son comparables?
-- ¿la forma observada de supervivencia parece compatible con una tasa constante?
-- ¿el riesgo cambia con la edad, sugiriendo Weibull?
-- ¿se registraron fallas, tiempos de exposición y censura de forma consistente?
-- ¿la evidencia disponible alcanza el nivel de confianza requerido?
-
-Para una Exponencial, $\log R(t)$ debería ser aproximadamente lineal en $t$. Para Weibull, un gráfico de probabilidad o un ajuste por máxima verosimilitud ayuda a revisar $\beta$ y $\eta$.
-
----
-
-## Estadísticos de orden: varias vidas, una falla del sistema
-
-Sean $T_1,\ldots,T_n$ las vidas de $n$ componentes y ordénelas:
-
-$$
-T_{(1)}\le T_{(2)}\le\cdots\le T_{(n)}
-$$
-
-| Situación | Tiempo relevante |
-|---|---|
-| Todos los componentes son necesarios | $T_{(1)}$: primera falla |
-| Basta que uno siga funcionando | $T_{(n)}$: última falla |
-| Deben funcionar al menos $k$ de $n$ | $T_{(n-k+1)}$: falla número $n-k+1$ |
-
-<div class="bridge">
-Esta es la conexión matemática entre vidas individuales y la confiabilidad de una arquitectura. No requiere todavía dibujar un RBD.
-</div>
-
----
-
-## Contexto de ingeniería: de la vida al servicio
-
-La confiabilidad participa durante todo el ciclo de vida del sistema:
-
-| Etapa | Pregunta típica |
-|---|---|
-| Diseño | ¿qué misión y nivel de servicio se deben exigir? |
-| Prueba e introducción | ¿existen fallas tempranas o incertidumbre alta? |
-| Operación | ¿qué evidencias actualizan el modelo y qué mantenimiento conviene? |
-| Soporte | ¿repuestos, detección y reparación protegen la continuidad? |
-
-La confiabilidad como ingeniería se concentra en requisitos, pruebas y rediseño. La confiabilidad como servicio incorpora logística, repuestos y recuperación.
 
 ---
 
@@ -650,7 +381,10 @@ $$
 \widehat\lambda=\frac5{2500}=0.002\ \mathrm h^{-1}
 $$
 
-La decisión aún requiere, al menos, revisar si la tasa es constante y cuantificar incertidumbre. Un punto estimado no revela desgaste, comparabilidad ni costo de reemplazar.
+La tasa estimada no basta, por sí sola, para decidir un reemplazo preventivo. Al menos debemos revisar:
+
+- Si la tasa es aproximadamente constante. Si existe desgaste, la Weibull puede ser más apropiada.
+- Si las condiciones de operación y el evento de falla son comparables. Además, la decisión depende del costo de reemplazar.
 
 
 ---
@@ -660,9 +394,31 @@ La decisión aún requiere, al menos, revisar si la tasa es constante y cuantifi
 1. Un proceso de Poisson y una Exponencial conectan conteos y tiempos entre eventos bajo supuestos explícitos.
 2. Media y variabilidad cumplen funciones distintas. $C_V$ es una señal, no una prueba.
 3. Weibull permite revisar si el riesgo cambia con la edad.
-4. Una estimación debe comunicar datos, censura, incertidumbre y validación del modelo.
-5. Los estadísticos de orden preparan el paso desde componentes individuales a sistemas compuestos.
-6. El anexo presenta otras distribuciones y sus supuestos característicos.
+4. Una estimación debe comunicar datos, censura, supuestos y validación del modelo.
+5. El anexo presenta otras distribuciones y sus supuestos característicos.
+
+---
+
+## De un componente a un servicio
+
+Hasta ahora se modeló un componente. Para obtener $R_{\mathrm{sistema}}(t)$ también se necesita saber cómo se conectan los componentes.
+
+<img class="diagram" src="images/componente-a-servicio.svg" alt="Comparación entre una arquitectura serie, donde A y B deben funcionar, y una arquitectura en paralelo, donde basta que funcione A o B">
+
+---
+
+## Misma confiabilidad, diseños distintos
+
+Si dos componentes independientes tienen $R_1(t)=R_2(t)=0.9$:
+
+$$
+\begin{aligned}
+R_{\mathrm{serie}}(t)&=0.9\times0.9=0.81,\\
+R_{\mathrm{paralelo}}(t)&=1-(1-0.9)^2=0.99.
+\end{aligned}
+$$
+
+La misma confiabilidad individual puede producir servicios muy distintos. La siguiente clase generaliza este cálculo a arquitecturas serie, paralelo y $k$-de-$n$.
 
 ---
 
@@ -842,5 +598,4 @@ Aproximadamente el $68\%$ de las mediciones queda entre $95$ y $105\ \mathrm{ms}
 - K. S. Trivedi, *Probability and Statistics with Reliability, Queuing, and Computer Science Applications*, 2.ª ed., Wiley, 2002, caps. 2 a 4.
 - K. S. Trivedi y A. Bobbio, *Reliability and Availability Engineering: Modeling, Analysis, and Applications*, Cambridge University Press, 2017, caps. 1 a 4.
 - S. M. Ross, *Introduction to Probability Models*, 12.ª ed., Academic Press, 2019, caps. 2 a 5.
-- NIST/SEMATECH, [tabla de valores críticos de la distribución chi cuadrado](https://www.itl.nist.gov/div898/handbook/eda/section3/eda3674.htm).
 - Material histórico TEL211: distribuciones de probabilidad, teoría de confiabilidad y *Expectation*, USM.
