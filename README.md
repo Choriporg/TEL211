@@ -18,6 +18,7 @@ bajo carga para fundamentar decisiones de diseño y operación.
 |---|---|---|
 | `00` | Presentación y mapa conceptual del curso | [PDF](00-Presentacion-Curso/00-presentacion-curso.pdf) · [fuente Markdown](00-Presentacion-Curso/00-presentacion-curso.md) |
 | `01` | Fundamentos de probabilidad para confiabilidad y rendimiento | [PDF](01-Fundamentos-Probabilidad/01-fundamentos-probabilidad.pdf) · [fuente Markdown](01-Fundamentos-Probabilidad/01-fundamentos-probabilidad.md) · [notebook](01-Fundamentos-Probabilidad/codigo/distribuciones.ipynb) · [mapa de distribuciones](01-Fundamentos-Probabilidad/images/mapa-distribuciones.png) |
+| `02` | Teoría de confiabilidad: del tiempo de vida a una decisión | [PDF](02-Teoria-Confiabilidad/02-teoria-confiabilidad.pdf) · [fuente Markdown](02-Teoria-Confiabilidad/02-teoria-confiabilidad.md) · [curva de bañera](02-Teoria-Confiabilidad/images/bathtub-curve.svg) · [componente a servicio](02-Teoria-Confiabilidad/images/componente-a-servicio.svg) · [área bajo la curva MTTF](02-Teoria-Confiabilidad/images/mttf-area.svg) |
 
 ## Cómo obtener el repositorio
 

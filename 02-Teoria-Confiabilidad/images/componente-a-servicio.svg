@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">De componentes a un servicio en serie o paralelo</title>
+  <desc id="desc">Dos arquitecturas. En serie, los componentes A y B deben funcionar. En paralelo, basta que funcione A o B.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#2f6f9f"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="700" fill="#ffffff"/>
+
+  <rect x="35" y="35" width="1130" height="285" rx="22" fill="#eef6fb"/>
+  <rect x="35" y="380" width="1130" height="285" rx="22" fill="#fff4df"/>
+
+  <g font-family="Arial, Helvetica, sans-serif" fill="#12394f">
+    <text x="80" y="88" font-size="32" font-weight="700">Serie: todos los componentes deben funcionar</text>
+    <text x="80" y="433" font-size="32" font-weight="700">Paralelo: basta una ruta funcionando</text>
+  </g>
+
+  <g fill="none" stroke="#2f6f9f" stroke-width="6" stroke-linecap="round" marker-end="url(#arrow)">
+    <line x1="230" y1="185" x2="352" y2="185"/>
+    <line x1="528" y1="185" x2="650" y2="185"/>
+    <line x1="826" y1="185" x2="948" y2="185"/>
+
+    <line x1="230" y1="530" x2="352" y2="500"/>
+    <line x1="230" y1="530" x2="352" y2="590"/>
+    <line x1="528" y1="500" x2="948" y2="530"/>
+    <line x1="528" y1="590" x2="948" y2="530"/>
+  </g>
+
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#12394f">
+    <rect x="80" y="140" width="150" height="90" rx="16" fill="#ffffff" stroke="#93a8b7" stroke-width="4"/>
+    <text x="155" y="194" font-size="28" font-weight="700">Entrada</text>
+
+    <rect x="352" y="140" width="176" height="90" rx="16" fill="#dce9fa" stroke="#4f80b5" stroke-width="4"/>
+    <text x="440" y="178" font-size="27" font-weight="700">A</text>
+    <text x="440" y="208" font-size="22">R<tspan baseline-shift="sub" font-size="16">A</tspan>(t)</text>
+
+    <rect x="650" y="140" width="176" height="90" rx="16" fill="#dce9fa" stroke="#4f80b5" stroke-width="4"/>
+    <text x="738" y="178" font-size="27" font-weight="700">B</text>
+    <text x="738" y="208" font-size="22">R<tspan baseline-shift="sub" font-size="16">B</tspan>(t)</text>
+
+    <rect x="948" y="140" width="160" height="90" rx="16" fill="#ffffff" stroke="#93a8b7" stroke-width="4"/>
+    <text x="1028" y="178" font-size="26" font-weight="700">Servicio</text>
+    <text x="1028" y="208" font-size="20">A y B</text>
+
+    <rect x="80" y="485" width="150" height="90" rx="16" fill="#ffffff" stroke="#93a8b7" stroke-width="4"/>
+    <text x="155" y="539" font-size="28" font-weight="700">Entrada</text>
+
+    <rect x="352" y="455" width="176" height="90" rx="16" fill="#dce9fa" stroke="#4f80b5" stroke-width="4"/>
+    <text x="440" y="493" font-size="27" font-weight="700">A</text>
+    <text x="440" y="523" font-size="22">R<tspan baseline-shift="sub" font-size="16">A</tspan>(t)</text>
+
+    <rect x="352" y="545" width="176" height="90" rx="16" fill="#dce9fa" stroke="#4f80b5" stroke-width="4"/>
+    <text x="440" y="583" font-size="27" font-weight="700">B</text>
+    <text x="440" y="613" font-size="22">R<tspan baseline-shift="sub" font-size="16">B</tspan>(t)</text>
+
+    <rect x="948" y="485" width="160" height="90" rx="16" fill="#ffffff" stroke="#b7791f" stroke-width="4"/>
+    <text x="1028" y="523" font-size="26" font-weight="700">Servicio</text>
+    <text x="1028" y="553" font-size="20">A o B</text>
+  </g>
+</svg>

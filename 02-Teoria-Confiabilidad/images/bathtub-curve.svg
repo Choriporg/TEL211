@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" role="img" aria-labelledby="title desc">
+  <title id="title">Curva de bañera de la tasa de riesgo</title>
+  <desc id="desc">La tasa de riesgo comienza alta y decrece durante las fallas tempranas, se mantiene baja en la vida útil y aumenta durante el desgaste.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#12394f"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="620" fill="#ffffff"/>
+
+  <rect x="100" y="55" width="250" height="470" fill="#fff4df" opacity="0.72"/>
+  <rect x="350" y="55" width="330" height="470" fill="#eef6fb" opacity="0.9"/>
+  <rect x="680" y="55" width="240" height="470" fill="#fff4df" opacity="0.72"/>
+
+  <line x1="100" y1="525" x2="935" y2="525" stroke="#12394f" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="100" y1="525" x2="100" y2="42" stroke="#12394f" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <line x1="350" y1="55" x2="350" y2="525" stroke="#93a8b7" stroke-width="2" stroke-dasharray="8 8"/>
+  <line x1="680" y1="55" x2="680" y2="525" stroke="#93a8b7" stroke-width="2" stroke-dasharray="8 8"/>
+  <line x1="120" y1="432" x2="900" y2="432" stroke="#93a8b7" stroke-width="2" stroke-dasharray="8 8"/>
+
+  <path d="M130 115 C178 235 225 378 300 421 C382 468 560 460 665 431 C752 407 805 304 900 118"
+        fill="none" stroke="#2f6f9f" stroke-width="10" stroke-linecap="round"/>
+
+  <circle cx="300" cy="421" r="7" fill="#2f6f9f"/>
+  <circle cx="665" cy="431" r="7" fill="#2f6f9f"/>
+
+  <g font-family="Arial, Helvetica, sans-serif" fill="#12394f" text-anchor="middle">
+    <text x="225" y="92" font-size="28" font-weight="700">Fallas tempranas</text>
+    <text x="225" y="124" font-size="22">riesgo decreciente</text>
+
+    <text x="515" y="92" font-size="28" font-weight="700">Vida útil</text>
+    <text x="515" y="124" font-size="22">riesgo bajo y estable</text>
+
+    <text x="800" y="92" font-size="28" font-weight="700">Desgaste</text>
+    <text x="800" y="124" font-size="22">riesgo creciente</text>
+
+    <text x="76" y="42" font-size="30" font-weight="700">h(t)</text>
+    <text x="944" y="566" font-size="30" font-weight="700">t</text>
+    <text x="520" y="418" font-size="20" fill="#486879">riesgo bajo</text>
+  </g>
+</svg>
