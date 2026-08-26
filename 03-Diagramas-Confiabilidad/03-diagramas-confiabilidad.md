@@ -708,9 +708,7 @@ Los RBD describen la lógica estructural del sistema. Las reglas de producto, co
 
 ---
 
-## Ejercicio tipo certamen
-
-### Ejercicio propuesto:
+## Ejercicio propuesto:
 
 Este ejercicio integra las dos reducciones básicas y una decisión de diseño: mejorar una rama redundante o eliminar un punto único de falla.
 
