@@ -125,6 +125,65 @@ style: |
   section.tmr-sum .callout {
     font-size: 0.86em;
   }
+  section.rbd-reduction-limit,
+  section.bridge-example,
+  section.conditioning-idea,
+  section.bridge-case,
+  section.conditioning-total,
+  section.tool-transition,
+  section.path-min,
+  section.cut-min,
+  section.path-purpose,
+  section.cut-purpose,
+  section.path-cut-compare {
+    font-size: 24px;
+  }
+  section.rbd-reduction-limit table {
+    font-size: 0.9em;
+    margin: 0.9em auto;
+  }
+  section.bridge-example img.diagram {
+    max-height: 255px;
+  }
+  section.conditioning-idea .callout,
+  section.conditioning-total .callout,
+  section.tool-transition .bridge,
+  section.path-min .callout,
+  section.cut-min .warn {
+    font-size: 0.84em;
+  }
+  section.bridge-case img.diagram-small {
+    max-height: 220px;
+  }
+  section.bridge-case .callout {
+    font-size: 0.82em;
+  }
+  section.path-min img.diagram-small,
+  section.cut-min img.diagram-small {
+    max-height: 190px;
+  }
+  section.cut-min {
+    font-size: 22px;
+  }
+  section.cut-min img.diagram-small {
+    max-height: 165px;
+  }
+  section.path-purpose .callout,
+  section.cut-purpose .warn,
+  section.path-cut-compare .bridge,
+  section.path-cut-compare .warn {
+    font-size: 0.84em;
+  }
+  section.cut-use {
+    font-size: 24px;
+  }
+  section.cut-use .warn {
+    font-size: 0.84em;
+  }
+  section.path-cut-compare table {
+    font-size: 0.9em;
+    margin: 1em auto;
+  }
   section.mttf-table table {
     font-size: 1em;
     margin: 1.2em auto 1.4em;
@@ -1008,70 +1067,265 @@ La lógica de mayoría se mantiene. Solo cambia la confiabilidad de cada módulo
 
 ---
 
-## Red puente: la rama central impide reducir de una vez
+<!-- _class: rbd-reduction-limit -->
 
-Las ramas superior e inferior se cruzan mediante $C_3$. Por eso la red no es directamente serie ni paralelo.
+## ¿Siempre podemos reducir un RBD?
+
+Hasta ahora, reducíamos los RBD con bloques equivalentes en serie y paralelo.
+
+Una conexión cruzada puede impedir encontrar un bloque inicial. Necesitamos otra estrategia para calcular $R_s$.
+
+| **Reducible** | **No reducible directamente** |
+|---|---|
+| serie/paralelo → reducir → reducir → $R_s$ | red con conexión cruzada → ? |
+
+<div class="warn">
+La red puente muestra este límite de las reglas de serie y paralelo.
+</div>
+
+---
+
+<!-- _class: bridge-example -->
+
+## Ejemplo de red no reducible: red puente
 
 <img class="diagram" src="images/red-puente.png" alt="Red puente con C1 y C2 arriba, C4 y C5 abajo, y C3 entre los nodos centrales">
 
+Hay dos trayectorias principales entre entrada y salida. $C_3$ une sus nodos intermedios y crea caminos cruzados.
+
+Ya no hay dos ramas paralelas independientes.
+
+**¿Cómo calculamos $R_s$ si ya no podemos reducir directamente el RBD?**
+
 ---
 
-## Si $C_3$ falla, quedan dos ramas serie en paralelo
+<!-- _class: conditioning-idea -->
+
+## Idea: fijar temporalmente el estado de un componente
+
+Elegimos $C_3$ porque sus estados simplifican la red.
+
+$$
+C_3\text{ funciona}
+\qquad\text{o}\qquad
+C_3\text{ falla}
+$$
+
+Los casos son mutuamente excluyentes, exhaustivos y producen RBD más simples.
+
+<div class="callout">
+No modificamos la red. Separamos sus estados para calcularlos por separado.
+</div>
+
+---
+
+<!-- _class: bridge-case -->
+
+## Si $C_3$ falla: reaparecen serie y paralelo
+
+Si $C_3$ falla, desaparece la conexión central.
 
 <img class="diagram-small" src="images/red-puente-c3-fallado.png" alt="Red puente reducida con C3 fallado">
 
+Quedan dos ramas en paralelo:
+
 $$
-R_{S\mid C^c}=1-(1-R_1R_2)(1-R_4R_5)
+R_{\text{sup}}=R_1R_2
+\qquad
+R_{\text{inf}}=R_4R_5
 $$
+
+$$
+R_{S\mid C_3^c}=1-(1-R_1R_2)(1-R_4R_5)
+$$
+
+<div class="callout">
+El caso vuelve a ser una combinación de serie y paralelo.
+</div>
 
 ---
 
-## Si $C_3$ funciona, la conexión central es perfecta
+<!-- _class: bridge-case -->
+
+## Si $C_3$ funciona: una conexión perfecta
+
+Si $C_3$ funciona, sus extremos quedan unidos por un camino garantizado. Los nodos centrales son equivalentes.
 
 <img class="diagram-small" src="images/red-puente-c3-operativo.png" alt="Red puente reducida con C3 reemplazado por una conexión perfecta">
 
+La red queda como:
+
 $$
-R_{S\mid C}
+(C_1\parallel C_4)
+\quad\text{en serie con}\quad
+(C_2\parallel C_5)
+$$
+
+$$
+R_{S\mid C_3}
 =[1-(1-R_1)(1-R_4)]
 [1-(1-R_2)(1-R_5)]
 $$
 
+<div class="callout">
+Fijar el estado central transforma la red en una estructura reducible.
+</div>
+
 ---
+
+<!-- _class: conditioning-total -->
 
 ## Condicionamiento: combinar los dos casos
 
-Se pondera cada red reducida por la probabilidad del estado de $C_3$:
+Ponderamos cada caso por la probabilidad de su estado de $C_3$:
 
 $$
-R_s=R_C R_{S\mid C}+(1-R_C)R_{S\mid C^c}
+R_s
+=P(C_3)R_{S\mid C_3}
++P(C_3^c)R_{S\mid C_3^c}
 $$
 
-<div class="bridge">
-Dividimos una red difícil en dos casos simples. Así evitamos enumerar todos los estados de la red completa.
+Como $P(C_3)=R_3$:
+
+$$
+R_s
+=R_3R_{S\mid C_3}
++(1-R_3)R_{S\mid C_3^c}
+$$
+
+<div class="callout">
+Así reutilizamos serie y paralelo en una red que no era reducible directamente.
 </div>
 
 ---
+
+<!-- _class: tool-transition -->
+
+## Otra forma de describir redes complejas
+
+El condicionamiento permite **calcular** $R_s$. Otra pregunta es qué combinaciones garantizan éxito o falla.
+
+¿Cómo calcular $R_s$? $\longrightarrow$ condicionamiento
+
+
+¿Qué combinaciones garantizan éxito o falla? $\longrightarrow$ caminos y cortes mínimos
+
+---
+
+<!-- _class: path-min -->
 
 ## Camino mínimo: una ruta que garantiza el éxito
 
+Si todos los componentes de un camino mínimo funcionan, existe un camino completo entre entrada y salida.
+
 <img class="diagram-small" src="images/camino-minimo.png" alt="Camino mínimo formado por los componentes A y B resaltados en verde">
 
-Un **camino mínimo** es un conjunto mínimo de componentes operativos que garantiza el funcionamiento. En el ejemplo, el camino resaltado es $\{A,B\}$.
+En este ejemplo hay dos caminos mínimos:
+
+$$
+\{A,B\}
+\qquad
+\{A,C\}
+$$
+
+$$
+\text{Éxito}=(A\cap B)\cup(A\cap C)
+$$
 
 <div class="callout">
-Si se elimina cualquier componente del conjunto, deja de garantizar el éxito.
+El sistema funciona si al menos uno de sus caminos mínimos está operativo.
 </div>
 
 ---
 
-## Corte mínimo: una combinación de fallas
+<!-- _class: path-purpose -->
+
+## ¿Para qué sirve un camino mínimo?
+
+- Identificar rutas suficientes para mantener el servicio
+- Reconocer redundancia entre trayectorias
+- Formular el evento de éxito del sistema
+
+<div class="callout">
+Los caminos mínimos responden: <strong>¿qué combinaciones mínimas bastan para que el sistema funcione?</strong>
+</div>
+
+---
+
+<!-- _class: cut-min -->
+
+## Corte mínimo: conjuntos que provocan la falla
+
+Un corte mínimo es un conjunto de componentes cuya falla provoca la falla del sistema.
 
 <img class="diagram-small" src="images/corte-minimo.png" alt="Corte mínimo formado por los componentes B y C resaltados en naranja">
 
-Un **corte mínimo** es un conjunto mínimo de componentes cuya falla provoca la falla del sistema. En el ejemplo, el corte resaltado es $\{B,C\}$.
+**Corte $\{A\}$:** si falla $A$, se interrumpen todos los caminos hacia la salida.
+
+**Corte $\{B,C\}$:** si fallan simultáneamente $B$ y $C$, también se interrumpen todos los caminos.
+
+$$
+\{A\}
+\qquad
+\{B,C\}
+$$
+
+$$
+\text{Falla}=A^c\cup(B^c\cap C^c)
+$$
 
 <div class="warn">
-Si se elimina cualquier componente del conjunto, deja de garantizar la falla. Los caminos describen el éxito y los cortes describen la falla. Esta segunda mirada conduce al árbol de fallas.
+El sistema falla si ocurre al menos uno de sus cortes mínimos.
+</div>
+
+---
+
+## ¿Qué significa "mínimo"?
+
+"Mínimo" significa que no sobra ningún componente dentro del conjunto.
+
+Para $\{B,C\}$:
+
+- si falla solo $B$, el sistema puede seguir por $C$
+- si falla solo $C$, el sistema puede seguir por $B$
+- cuando fallan ambos, el sistema falla
+
+<div class="warn">
+Por eso, este conjunto es mínimo: quitar uno de sus componentes hace que deje de garantizar la falla.
+</div>
+
+Puede existir más de un corte mínimo en el mismo sistema.
+
+---
+
+## ¿Para qué sirve un corte mínimo?
+
+- Identificar combinaciones críticas de falla
+- Detectar puntos únicos de falla
+- Priorizar mejora, mantenimiento o redundancia
+
+<div class="warn">
+Los cortes mínimos responden: <strong>¿qué combinaciones mínimas bastan para hacer fallar el sistema?</strong>
+</div>
+
+---
+
+<!-- _class: path-cut-compare -->
+
+## Caminos y cortes: dos miradas
+
+| **Caminos mínimos** | **Cortes mínimos** |
+|---|---|
+| describen éxito | describen falla |
+| componentes que deben funcionar | componentes que deben fallar |
+| muestran redundancia | muestran vulnerabilidades |
+
+<div class="bridge">
+Los caminos muestran cómo sobrevive el sistema. Los cortes muestran cómo puede perderse.
+</div>
+
+<div class="warn">
+Los cortes mínimos describen fallas suficientes para producir el evento no deseado. Esta lógica se representa naturalmente con un <strong>Fault Tree</strong>.
 </div>
 
 ---
@@ -1081,6 +1335,12 @@ Si se elimina cualquier componente del conjunto, deja de garantizar la falla. Lo
 ## Árbol de fallas (FT): compuertas Y (AND) / O (OR)
 
 Mientras el RBD busca un camino de éxito, el árbol de fallas parte del evento no deseado y lo descompone en causas. Una compuerta OR basta con una causa. Una AND exige que ocurran todas.
+
+---
+
+<!-- diagram-slide: fault-tree-and-or -->
+
+## Árbol de fallas (FT): compuertas Y (AND) / O (OR)
 
 <img class="diagram" src="images/fault-tree-and-or.png" alt="Árbol de fallas con evento superior y compuertas AND y OR">
 
@@ -1095,7 +1355,6 @@ Mientras el RBD busca un camino de éxito, el árbol de fallas parte del evento 
 ## RBD frente a FT: misma arquitectura, dos preguntas
 
 Ambos modelos pueden representar la misma arquitectura, pero cambian el punto de partida y la pregunta que se responde.
-
 <img class="diagram" src="images/rbd-vs-ft.png" alt="Comparación lado a lado entre RBD y Fault Tree">
 
 <div class="small">
