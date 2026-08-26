@@ -184,6 +184,120 @@ style: |
     font-size: 0.9em;
     margin: 1em auto;
   }
+  section.rbd-vs-ft > p:first-of-type {
+    margin-bottom: 0.25em;
+  }
+  section.rbd-vs-ft img.diagram {
+    margin-top: 0;
+  }
+  section.rbd-vs-ft .warn {
+    font-size: 0.78em;
+  }
+  section.rbd-vs-ft-followup {
+    font-size: 24px;
+  }
+  section.rbd-vs-ft-followup table {
+    font-size: 0.92em;
+    margin: 1.2em auto;
+  }
+  section.rbd-vs-ft-followup .warn {
+    font-size: 0.84em;
+  }
+  section.ft-purpose,
+  section.ft-construction,
+  section.ft-gates,
+  section.ft-gate-prob,
+  section.ft-example,
+  section.ft-calculation,
+  section.ft-interpretation,
+  section.ft-cuts {
+    font-size: 24px;
+  }
+  section.ft-purpose .bridge,
+  section.ft-purpose .warn,
+  section.ft-construction .bridge,
+  section.ft-gates .callout,
+  section.ft-gate-prob .callout,
+  section.ft-example .bridge,
+  section.ft-calculation .bridge,
+  section.ft-calculation .warn,
+  section.ft-interpretation .callout,
+  section.ft-cuts .warn {
+    font-size: 0.84em;
+  }
+  section.ft-construction .columns {
+    align-items: center;
+    margin: 1.1em 0;
+  }
+  section.ft-construction .callout {
+    font-size: 0.86em;
+  }
+  section.ft-example img.diagram {
+    max-height: 330px;
+    margin: 0 auto 0.45em;
+  }
+  section.ft-example img.diagram + p {
+    margin-top: 0;
+  }
+  section.ft-calculation {
+    text-align: center;
+  }
+  section.ft-calculation .bridge,
+  section.ft-calculation .warn,
+  section.ft-interpretation .callout,
+  section.ft-cuts .warn {
+    text-align: left;
+  }
+  section.final-checklist {
+    font-size: 24px;
+  }
+  section.final-checklist h3 {
+    margin: 0.55em 0 0.12em;
+    color: #12394f;
+  }
+  section.final-checklist p {
+    margin: 0.08em 0;
+  }
+  section.final-checklist .checklist-close {
+    background: #fff4df;
+    border-left: 6px solid #b7791f;
+    border-radius: 6px;
+    padding: 0.65em 0.9em;
+    margin-top: 0.75em;
+    font-size: 0.86em;
+  }
+  section.exercise-context,
+  section.exercise-questions,
+  section.exercise-solution,
+  section.exercise-interpretation,
+  section.exercise-decision {
+    font-size: 24px;
+  }
+  section.exercise-context img.diagram {
+    max-height: 255px;
+  }
+  section.exercise-context .bridge,
+  section.exercise-solution .bridge,
+  section.exercise-decision .bridge {
+    font-size: 0.84em;
+  }
+  section.exercise-questions ol {
+    margin-top: 0.35em;
+  }
+  section.exercise-questions table,
+  section.exercise-decision table {
+    font-size: 0.84em;
+    margin: 0.8em auto;
+  }
+  section.exercise-solution,
+  section.exercise-interpretation {
+    text-align: center;
+  }
+  section.exercise-solution .bridge,
+  section.exercise-interpretation .bridge,
+  section.exercise-decision .bridge {
+    text-align: left;
+  }
   section.mttf-table table {
     font-size: 1em;
     margin: 1.2em auto 1.4em;
@@ -1332,15 +1446,71 @@ Los cortes mínimos describen fallas suficientes para producir el evento no dese
 
 <!-- diagram-slide: fault-tree-and-or -->
 
+## Fault Tree (FT)
+
+- Parte de una falla importante del sistema
+- Identifica causas y combinaciones de fallas
+- Permite calcular y priorizar el riesgo
+
+<div class="bridge">
+Los cortes mínimos ya identificaban combinaciones suficientes de fallas. El FT las organiza de forma gráfica y jerárquica.
+</div>
+
+<div class="warn">
+Un FT responde: <strong>¿qué debe ocurrir para que aparezca esta falla?</strong>
+</div>
+
+---
+
+<!-- _class: ft-construction -->
+
+## Construcción: partir del evento no deseado
+
+$$
+\text{Evento superior}
+\longrightarrow
+\text{eventos intermedios}
+\longrightarrow
+\text{causas b\'asicas}
+$$
+
+<div class="columns">
+<div class="callout"><strong>1. Causas inmediatas</strong><br>Alimentación o subsistema de servidores</div>
+<div class="callout"><strong>2. Descomponer</strong><br>El subsistema falla si fallan A y B</div>
+</div>
+
+$$
+F_{\mathrm{servicio}}=F_P\ \mathbf{OR}\ F_{\mathrm{servidores}}
+$$
+
+$$
+F_{\mathrm{servidores}}=F_A\ \mathbf{AND}\ F_B
+$$
+
+<div class="bridge">
+Si una causa sigue siendo compleja, se descompone otra vez. El subsistema de servidores es intermedio. Las fallas A y B son básicas.
+</div>
+
+<div class="warn">
+El árbol se construye de arriba hacia abajo. Las probabilidades se calculan de abajo hacia arriba.
+</div>
+
+---
+
+<!-- _class: ft-gates -->
+
 ## Árbol de fallas (FT): compuertas Y (AND) / O (OR)
 
-Mientras el RBD busca un camino de éxito, el árbol de fallas parte del evento no deseado y lo descompone en causas. Una compuerta OR basta con una causa. Una AND exige que ocurran todas.
+Se parte del evento no deseado. La compuerta indica cómo se combinan sus causas:
+
+- **O (OR):** basta una causa
+- **Y (AND):** deben ocurrir todas
 
 ---
 
 <!-- diagram-slide: fault-tree-and-or -->
 
-## Árbol de fallas (FT): compuertas Y (AND) / O (OR)
+## Dos compuertas, dos condiciones
 
 <img class="diagram" src="images/fault-tree-and-or.png" alt="Árbol de fallas con evento superior y compuertas AND y OR">
 
@@ -1350,85 +1520,320 @@ Mientras el RBD busca un camino de éxito, el árbol de fallas parte del evento 
 
 ---
 
+## Compuerta OR: ocurre al menos una causa
+
+Para eventos independientes $A$ y $B$:
+
+$$
+P(A\cup B)=1-[1-P(A)][1-P(B)]
+$$
+
+<div class="callout">
+El evento superior ocurre si ocurre una causa, la otra o ambas.
+</div>
+
+---
+
+## Compuerta AND: deben ocurrir ambas causas
+
+Para eventos independientes $A$ y $B$:
+
+$$
+P(A\cap B)=P(A)P(B)
+$$
+
+<div class="callout">
+El evento superior ocurre solo si ocurren ambas causas.
+</div>
+
+---
+
+<!-- _class: ft-example -->
+
+## Ejemplo TIC: falla del servicio
+
+La compuerta AND ya representa la falla simultánea de los servidores A y B.
+
+<img class="diagram" src="images/fault-tree-service-example.png" alt="Fault Tree de una falla del servicio por alimentación o falla de ambos servidores">
+
+$$
+F_{\mathrm{servicio}}=F_P\cup(F_A\cap F_B)
+$$
+
+<div class="bridge">
+El servicio falla si falla la alimentación, o si fallan simultáneamente los dos servidores redundantes.
+</div>
+
+---
+
+## Ejemplo TIC: calcular la rama AND
+
+Con $P(F_P)=0.02$ y $P(F_A)=P(F_B)=0.05$, primero calculamos la rama AND:
+
+$$
+P(F_{\mathrm{servidores}})
+=P(F_A\cap F_B)
+ =0.05\times0.05=0.0025
+$$
+
+<div class="bridge">
+La redundancia hace poco probable esta falla doble.
+</div>
+
+---
+
+## Ejemplo TIC: combinar las causas
+
+La falla de alimentación se combina con el evento intermedio mediante OR:
+
+$$
+P(F_{\mathrm{servicio}})
+=P(F_P\cup F_{\mathrm{servidores}})
+$$
+
+$$
+P(F_{\mathrm{servicio}})=1-[1-0.02][1-0.0025]
+$$
+
+$$
+P(F_{\mathrm{servicio}})=0.02245\approx2.25\%
+$$
+
+$$
+R_{\mathrm{servicio}}=1-P(F_{\mathrm{servicio}})\approx97.75\%
+$$
+
+<div class="warn">
+La alimentación puede derribar el servicio por sí sola.
+</div>
+
+---
+
+<!-- _class: ft-interpretation -->
+
+## ¿Qué muestra este Fault Tree?
+
+- La alimentación es un punto único de falla
+- Los servidores requieren una falla doble
+- La redundancia protege solo esa rama
+
+<div class="callout">
+El FT no solo calcula una probabilidad. Muestra cómo se construye la falla del sistema a partir de sus causas.
+</div>
+
+---
+
+<!-- _class: ft-cuts -->
+
+## Fault Tree y cortes mínimos
+
+Para este ejemplo, los cortes mínimos son:
+
+$$
+\{F_P\}
+\qquad
+\{F_A,F_B\}
+$$
+
+- $\{F_P\}$: basta la falla de alimentación
+- $\{F_A,F_B\}$: deben fallar ambos servidores
+
+<div class="warn">
+Cada combinación de eventos básicos que conduce al evento superior muestra una forma crítica de falla.
+</div>
+
+---
+
 <!-- diagram-slide: rbd-vs-ft -->
+<!-- _class: rbd-vs-ft -->
 
-## RBD frente a FT: misma arquitectura, dos preguntas
+## RBD frente a FT: misma arquitectura
 
-Ambos modelos pueden representar la misma arquitectura, pero cambian el punto de partida y la pregunta que se responde.
+Ambos modelos pueden representar la misma arquitectura. Cambia la pregunta que se responde.
+
 <img class="diagram" src="images/rbd-vs-ft.png" alt="Comparación lado a lado entre RBD y Fault Tree">
 
-<div class="small">
-<strong>Lectura:</strong> RBD pregunta qué debe funcionar. FT pregunta qué combinación de eventos produce la falla. No se debe interpretar la forma geométrica de una compuerta FT como si fuera una conexión física.
-</div>
-
-<div class="warn">
-Si el mismo componente aparece en más de una rama del árbol, representa un único evento repetido. No debe contarse como si fueran fallas independientes distintas. Su dependencia debe tratarse explícitamente.
-</div>
-
 ---
 
-## Errores Frecuentes
+<!-- _class: rbd-vs-ft-followup -->
 
-Antes de aceptar un resultado, revise la lógica funcional, el complemento usado y el supuesto de independencia:
+## RBD frente a FT: dos preguntas
 
-| Síntoma | Causa probable |
+| **RBD** | **Fault Tree** |
 |---|---|
-| Confundir serie con paralelo en diagrama | No identificar correctamente dependencia lógica |
-| Omitir el complemento al calcular la falla de todas las ramas | Tomar el producto de fallas como confiabilidad del paralelo |
-| Ignorar dependencia entre componentes | Asumir independencia cuando existen correlaciones |
+| pregunta qué debe funcionar | pregunta qué produce la falla |
+| describe caminos de éxito | describe eventos de falla |
+
+<div class="bridge">
+La forma de una compuerta FT no representa una conexión física.
+</div>
 
 <div class="warn">
-Los RBD describen la lógica estructural del sistema. Las reglas de producto, complemento y reducción de esta clase requieren eventos de funcionamiento independientes. Las correlaciones no consideradas pueden invalidar el cálculo.
+Si un componente aparece en más de una rama del árbol, representa un único evento repetido. No debe contarse como fallas independientes. La dependencia debe tratarse explícitamente.
 </div>
 
 ---
 
-## Ejercicio propuesto:
+## Antes de aceptar el resultado: ¿qué revisar?
 
-Este ejercicio integra las dos reducciones básicas y una decisión de diseño: mejorar una rama redundante o eliminar un punto único de falla.
+### 1. Lógica funcional
 
-Dado un sistema con:
-- dos servidores independientes en paralelo, cada uno con $R=0.95$
-- un switch independiente en serie con $R_{\mathrm{sw}}=0.98$.
+¿El RBD representa bien la lógica?
 
-**Preguntas:**
-1. Dibuje el RBD del sistema
-2. Calcule la confiabilidad total
-3. Compare aumentar el switch a $0.99$ con aumentar cada servidor a $0.96$.
+Serie: todos deben funcionar. Paralelo: basta al menos uno.
 
-<div class="example-space">
-Espacio para desarrollar cálculos y discutir prioridades de mejora en diseño.
+### 2. Éxito o falla
+
+¿Se está calculando correctamente el evento de éxito o de falla?
+
+En paralelo, muchas veces conviene calcular primero la falla conjunta:
+
+$$
+R_s=1-P(\text{fallan todas las ramas})
+$$
+
+---
+
+## Antes de aceptar el resultado: ¿qué revisar?
+
+### 3. Independencia
+
+¿Es válido asumir independencia? Revise alimentación, switch, almacenamiento u otras causas comunes.
+
+<div class="checklist-close">
+Un cálculo correcto depende primero de un modelo correcto.
+Una fórmula bien aplicada sobre un RBD mal planteado sigue dando un resultado incorrecto.
 </div>
 
 ---
 
-## Solución del ejercicio
+<!-- _class: exercise-context -->
 
-Confiabilidad del bloque de servidores:
+## Ejercicio: servicio con servidores redundantes
 
-$$
-R_{\mathrm{srv}}=1-(1-0.95)^2=0.9975
-$$
+El switch es obligatorio. Basta que uno de los dos servidores sobreviva la misión.
 
-Sistema original:
+En el RBD, el diagrama de bloques de confiabilidad, $S$ es el switch y $A$, $B$ son los servidores.
 
-$$
-R_{\mathrm{s}}=0.98(0.9975)=0.97755
-$$
+<img class="diagram" src="images/birnbaum-rbd.png" alt="RBD con un switch en serie y dos servidores en paralelo">
 
-Alternativas:
+Analizaremos una misión de duración $t_m=200\ \mathrm{h}$. Las tasas de falla constantes son:
 
 $$
-R_{\mathrm{s}}^{(\mathrm{sw})}=0.99(0.9975)=0.987525
+\lambda_{\mathrm{sw}}=2\times10^{-4}\ \mathrm{h}^{-1}
+\qquad
+\lambda_A=\lambda_B=5\times10^{-4}\ \mathrm{h}^{-1}
+$$
+
+Supuestos: componentes independientes y sin reparación durante la misión.
+
+---
+
+<!-- _class: exercise-questions -->
+
+## Ejercicio: servicio con servidores redundantes
+
+1. Identifique qué parte del RBD es serie y cuál es paralelo.
+2. Calcule la confiabilidad del switch, $R_{\mathrm{sw}}(t_m)$, y la de cada servidor, $R_A(t_m)=R_B(t_m)$.
+3. A partir del diagrama de bloques, calcule la confiabilidad del sistema completo, $R_s(t_m)$.
+4. Interprete $R_s(t_m)$ como probabilidad de completar la misión.
+5. Compare estas mejoras:
+
+| Alternativa | Cambio en la tasa de falla |
+|---|---|
+| A. Mejorar el switch | $\lambda_{\mathrm{sw}}: 2\times10^{-4}\rightarrow1\times10^{-4}\ \mathrm{h}^{-1}$ |
+| B. Mejorar ambos servidores | $\lambda_A=\lambda_B: 5\times10^{-4}\rightarrow4\times10^{-4}\ \mathrm{h}^{-1}$ |
+
+---
+
+## Solución: 
+### 1. estructura del RBD
+
+En el diagrama:
+
+**Serie:** $S$ está en serie con el bloque de servidores.
+
+**Paralelo:** $A$ y $B$ están en paralelo.
+
+Por eso, el switch es obligatorio y basta que uno de los servidores funcione.
+
+---
+
+## Solución: 
+### 2. confiabilidad de cada componente
+
+Para cualquier componente $i$, $R_i(t)$ representa la probabilidad de que siga operativo hasta $t$.
+
+$$
+R_i(t)=e^{-\lambda_i t}
 $$
 
 $$
-R_{\mathrm{s}}^{(\mathrm{srv})}=0.98[1-(1-0.96)^2]=0.978432
+R_{\mathrm{sw}}(200)
+=e^{-(2\times10^{-4})(200)}
+\approx 0.9608
 $$
 
-Los incrementos son $\Delta R_{\mathrm{sw}}=0.987525-0.97755=0.009975$ y $\Delta R_{\mathrm{srv}}=0.978432-0.97755=0.000882$.
+$$
+R_A(200)=R_B(200)
+=e^{-(5\times10^{-4})(200)}
+\approx 0.9048
+$$
 
-Mejorar el switch produce mayor beneficio porque participa obligatoriamente en toda trayectoria de éxito. La mejora adicional de una rama ya redundante tiene menor impacto marginal.
+<div class="bridge">
+Estos valores son la probabilidad de que cada componente sobreviva las 200 h de misión.
+</div>
+
+---
+
+## Solución: 
+### 3. confiabilidad del sistema
+
+El bloque paralelo de servidores se resume en $R_{\mathrm{srv}}(t)$. Al incluir el switch en serie, obtenemos $R_s(t)$, la confiabilidad del sistema completo.
+
+$$
+R_{\mathrm{srv}}(200)
+=1-[1-R_A(200)][1-R_B(200)]
+\approx 0.9909
+$$
+
+$$
+R_s(200)
+=R_{\mathrm{sw}}(200)R_{\mathrm{srv}}(200)
+\approx 0.9608(0.9909)
+\approx 0.9521
+$$
+
+<div class="bridge">
+La redundancia hace muy confiable el subsistema de servidores, pero el switch sigue siendo obligatorio.
+</div>
+
+---
+
+## Solución: 
+### 4. interpretar la misión
+
+$$
+R_s(200)\approx0.9521
+$$
+
+$R_s(200)$ es la probabilidad de que el sistema continúe cumpliendo su función durante las 200 h de misión.
+
+
+---
+
+## Solución: 
+### 5. Comparación final
+
+| Caso | Recalcular | $R_s(200)$ | $\Delta R_s$ |
+|---|---|---:|---:|
+| Original | $R_{\mathrm{sw}}=0.9608$, $R_{\mathrm{srv}}=0.9909$ | $0.9521$ | — |
+| A. Switch | $R_{\mathrm{sw}}^{(A)}=0.9802$ | $0.9713$ | $+0.0192$ |
+| B. Servidores | $R_A^{(B)}=R_B^{(B)}=0.9231$<br>$R_{\mathrm{srv}}^{(B)}=0.9941$ | $0.9551$ | $+0.0030$ |
+
+<div class="bridge">
+Conviene mejorar el switch: su mejora produce el mayor aumento de la confiabilidad del sistema.
+</div>
 
 ---
 
