@@ -1746,7 +1746,7 @@ Supuestos: componentes independientes y sin reparación durante la misión.
 
 ---
 
-## Solución: 
+## Solución:
 ### 1. estructura del RBD
 
 En el diagrama:
@@ -1759,7 +1759,7 @@ Por eso, el switch es obligatorio y basta que uno de los servidores funcione.
 
 ---
 
-## Solución: 
+## Solución:
 ### 2. confiabilidad de cada componente
 
 Para cualquier componente $i$, $R_i(t)$ representa la probabilidad de que siga operativo hasta $t$.
@@ -1786,7 +1786,7 @@ Estos valores son la probabilidad de que cada componente sobreviva las 200 h de 
 
 ---
 
-## Solución: 
+## Solución:
 ### 3. confiabilidad del sistema
 
 El bloque paralelo de servidores se resume en $R_{\mathrm{srv}}(t)$. Al incluir el switch en serie, obtenemos $R_s(t)$, la confiabilidad del sistema completo.
@@ -1810,7 +1810,7 @@ La redundancia hace muy confiable el subsistema de servidores, pero el switch si
 
 ---
 
-## Solución: 
+## Solución:
 ### 4. interpretar la misión
 
 $$
@@ -1822,14 +1822,44 @@ $R_s(200)$ es la probabilidad de que el sistema continúe cumpliendo su función
 
 ---
 
-## Solución: 
-### 5. Comparación final
+## Solución:
+### 5. Comparación con Birnbaum
 
-| Caso | Recalcular | $R_s(200)$ | $\Delta R_s$ |
-|---|---|---:|---:|
-| Original | $R_{\mathrm{sw}}=0.9608$, $R_{\mathrm{srv}}=0.9909$ | $0.9521$ | — |
-| A. Switch | $R_{\mathrm{sw}}^{(A)}=0.9802$ | $0.9713$ | $+0.0192$ |
-| B. Servidores | $R_A^{(B)}=R_B^{(B)}=0.9231$<br>$R_{\mathrm{srv}}^{(B)}=0.9941$ | $0.9551$ | $+0.0030$ |
+Usamos la importancia de Birnbaum para medir el impacto de mejorar cada componente:
+
+| Componente | Importancia de Birnbaum en $t_m$ |
+|---|---:|
+| Switch $S$ | $I_S^B(200)=R_{\mathrm{srv}}(200)\approx0.9909$ |
+| Servidor $A$ | $I_A^B(200)=R_{\mathrm{sw}}(200)[1-R_B(200)]\approx0.0914$ |
+| Servidor $B$ | $I_B^B(200)=R_{\mathrm{sw}}(200)[1-R_A(200)]\approx0.0914$ |
+
+Si se mejoran ambos servidores, el impacto combinado es:
+
+$$
+I_A^B(200)+I_B^B(200)\approx0.1829
+<I_S^B(200)\approx0.9909
+$$
+
+El switch tiene mayor impacto que cada servidor y que la mejora conjunta de ambas ramas.
+
+---
+
+## Solución:
+### 5. Decisión de diseño
+
+La comparación exacta confirma la decisión anticipada por $I_i^B$:
+
+$$
+R_s^{(A)}(200)\approx0.9713
+\qquad
+R_s^{(B)}(200)\approx0.9551
+$$
+
+$$
+\Delta R_s^{(A)}\approx0.0192
+\qquad
+\Delta R_s^{(B)}\approx0.0030
+$$
 
 <div class="bridge">
 Conviene mejorar el switch: su mejora produce el mayor aumento de la confiabilidad del sistema.
