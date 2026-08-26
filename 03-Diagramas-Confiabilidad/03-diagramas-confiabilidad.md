@@ -88,6 +88,47 @@ style: |
   section.compact {
     font-size: 23px;
   }
+  section.birnbaum-prompt {
+    font-size: 23px;
+  }
+  section.birnbaum-prompt img.diagram-small {
+    max-height: 235px;
+  }
+  section.birnbaum-solution {
+    font-size: 23px;
+  }
+  section.birnbaum-solution .callout {
+    font-size: 0.84em;
+  }
+  section.birnbaum-solution .bridge,
+  section.birnbaum-solution .warn {
+    font-size: 0.70em;
+  }
+  section.tmr-cases-slide,
+  section.tmr-sum {
+    font-size: 24px;
+  }
+  .tmr-cases {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin: 0.8em 0 0.9em;
+  }
+  .tmr-case {
+    background: #eef6fb;
+    border-top: 5px solid #2f6f9f;
+    border-radius: 6px;
+    padding: 0.65em 0.5em;
+    text-align: center;
+  }
+  section.tmr-cases-slide .callout,
+  section.tmr-sum .callout {
+    font-size: 0.86em;
+  }
+  section.mttf-table table {
+    font-size: 1em;
+    margin: 1.2em auto 1.4em;
+  }
 ---
 <!-- _class: lead -->
 
@@ -238,23 +279,63 @@ El resultado muestra el efecto acumulativo: la misión sólo se completa si los 
 
 ---
 
-## Configuración en Paralelo (Redundancia)
+## Paralelo: partir desde $R_i(t)$ y $F_i(t)$
 
-**Regla:** El sistema funciona si **al menos uno** de los componentes funciona.
-
-Aquí resulta más directo calcular el evento contrario: que fallen todas las ramas. Su complemento es el éxito del sistema.
-
-### Cálculo (para $n$ componentes):
+Cada componente tiene confiabilidad $R_i(t)$. Su probabilidad de fallar antes de $t$ es:
 
 $$
-R_{\mathrm P}(t)=1-\prod_{i=1}^{n}[1-R_i(t)]
+F_i(t)=1-R_i(t)
 $$
 
-Para $n=2$ se recupera la expresión $1-(1-R_1(t))(1-R_2(t))=1-F_1(t)F_2(t)$.
+En un sistema en paralelo, el sistema funciona mientras **al menos una rama siga funcionando**. Por lo tanto, el sistema falla solamente si **todas las ramas fallan**.
+
+<div class="bridge">
+La distribución describe cada componente. El RBD combina esas probabilidades según la lógica de funcionamiento del sistema.
+</div>
 
 ---
 
-## Configuración en Paralelo: Ejemplo
+## Paralelo: dos componentes independientes
+
+Para dos componentes, el único caso de falla del sistema es que fallen ambos:
+
+$$
+F_{\mathrm{s}}(t)=F_1(t)F_2(t)
+$$
+
+Por complemento, la confiabilidad del sistema es:
+
+$$
+R_{\mathrm{s}}(t)=1-F_1(t)F_2(t)
+$$
+
+Sustituyendo $F_i(t)=1-R_i(t)$:
+
+$$
+R_{\mathrm{s}}(t)=1-[1-R_1(t)][1-R_2(t)]
+$$
+
+---
+
+## Paralelo: generalización a $n$ componentes
+
+El mismo razonamiento se extiende a todas las ramas:
+
+$$
+R_{\mathrm{s}}(t)=1-\prod_{i=1}^{n}[1-R_i(t)]
+$$
+
+<div class="callout">
+En paralelo no calculamos directamente el éxito: primero calculamos el único caso que hace fallar al sistema, que fallen todas las ramas.
+</div>
+
+$$
+R(t)\quad\longrightarrow\quad F(t)=1-R(t)\quad\longrightarrow\quad \text{arquitectura RBD}\quad\longrightarrow\quad R_{\mathrm{s}}(t)
+$$
+
+---
+
+## Configuración en Paralelo: la lógica de las ramas
 
 <img class="diagram" src="images/rbd-paralelo-ejemplo.png" alt="Diagrama RBD de dos ramas redundantes en paralelo">
 
@@ -264,7 +345,7 @@ Las dos ramas están activas y cualquiera puede sostener la salida. La misión f
 
 ---
 
-## Configuración en Paralelo: Ejemplo
+## Configuración en Paralelo: ejemplo numérico
 
 Dos componentes idénticos con $R=0.90$:
 
@@ -275,17 +356,17 @@ R_{\mathrm{sistema}}=1-(1-0.90)(1-0.90)=1-0.10\times0.10=0.99=99\%
 $$
 
 <div class="callout">
-La redundancia mejora significativamente la confiabilidad: de 90% a 99% con solo un componente adicional.
+Cada componente falla con probabilidad 10%. El sistema falla solo si ambos fallan, lo que ocurre con probabilidad 1%.
 </div>
 
 ---
 
-## Configuración en Paralelo: Ejemplo
+## Paralelo: por qué la redundancia mejora $R_{\mathrm{s}}(t)$
 
-La mejora ocurre porque ahora una falla individual no termina la misión. Deben fallar ambas ramas.
+Una falla individual ya no termina la misión: la otra rama puede continuar sosteniendo la función del sistema.
 
 <div class="bridge">
-Este cálculo representa redundancia <strong>activa</strong>. Las ramas operan simultáneamente y sus fallas se modelan como independientes. 
+Este cálculo representa redundancia <strong>activa</strong>: las ramas operan simultáneamente y sus fallas se modelan como independientes.
 </div>
 
 ---
@@ -466,16 +547,110 @@ $$
 Para comparar alternativas, priorice los componentes con mayor $I_i^B(t)$.
 
 ---
+<!-- _class: birnbaum-prompt -->
+
+## Ejemplo: Birnbaum para decidir qué mejorar
+
+El sistema tiene un switch $S$ en serie con dos servidores $A$ y $B$ en paralelo.
+
+<img class="diagram-small" src="images/birnbaum-rbd.png" alt="RBD con un switch en serie y dos servidores en paralelo">
+
+Confiabilidades:
+
+$$
+R_S=0.95,\qquad R_A=0.90,\qquad R_B=0.90
+$$
+
+1. Calcule $R_s$.
+2. Calcule $I_S^B$, $I_A^B$ e $I_B^B$.
+3. Decida qué componente conviene mejorar primero.
+
+---
+
+## Solución: importancia del switch $S$
+
+En un sistema mixto no se aplica directamente una fórmula única de serie o paralelo. Se parte de $R_s$ y se deriva respecto de cada $R_i$.
+
+Partimos de:
+
+$$
+R_s=R_S\left[1-(1-R_A)(1-R_B)\right]
+$$
+
+Derivamos respecto de $R_S$:
+
+$$
+I_S^B=\frac{\partial R_s}{\partial R_S}
+=1-(1-R_A)(1-R_B)
+$$
+
+Con los valores:
+
+$$
+I_S^B=1-(0.1)(0.1)=0.99
+$$
+
+<div class="callout">
+Mejorar el switch afecta a todo el subsistema redundante, porque está presente en todos los caminos de éxito.
+</div>
+
+---
+
+## Solución: importancia de los servidores
+
+Para el servidor $A$:
+
+$$
+I_A^B=\frac{\partial}{\partial R_A}
+\left[R_S\left(1-(1-R_A)(1-R_B)\right)\right]
+$$
+
+Luego
+
+$$
+I_A^B=R_S(1-R_B)=0.95(0.10)=0.095
+$$
+
+<div class="callout">
+Mejorar el servidor A solo aporta cuando el switch funciona y la otra rama B falla.
+</div>
+
+---
+
+## Solución: importancia de los servidores
+
+Por simetría:
+
+$$
+I_B^B=R_S(1-R_A)=0.95(0.10)=0.095
+$$
+
+<div class="bridge">
+A y B tienen la misma importancia porque ocupan la misma posición estructural y tienen la misma confiabilidad.
+</div>
+
+Resultado final:
+
+$$
+I_S^B=0.99,\qquad I_A^B=I_B^B=0.095
+$$
+
+<div class="warn">
+El switch tiene mucho mayor impacto de mejora porque participa en todos los caminos de éxito.
+</div>
+
+---
 
 ## MTTF de un sistema no reparable
 
-El MTTF es la vida esperada hasta la **primera falla**. Para un componente es el área bajo $R(t)$. Para un sistema se aplica la misma idea, pero usando la confiabilidad obtenida desde su RBD:
+El MTTF del sistema es el tiempo esperado hasta que el sistema deja de cumplir su función.
 
 $$
 \mathrm{MTTF}_{\mathrm{s}}=\int_0^\infty R_{\mathrm{s}}(t)\,dt
 $$
 
-Primero se construye $R_{\mathrm{s}}(t)$ con la arquitectura. Luego se integra esa curva.
+
+Primero el RBD entrega $R_{\mathrm{s}}(t)$. Luego el área bajo esa curva entrega el tiempo medio hasta la falla del sistema.
 
 ---
 
@@ -500,47 +675,78 @@ La arquitectura ya está incorporada en $R_{\mathrm{s}}(t)$. La integración tra
 
 ---
 
-## MTTF con RBD: caso serie
+## MTTF del sistema serie: las tasas se acumulan
 
-Con distribución exponencial, la tasa de falla del sistema serie es la suma de las tasas de sus componentes:
+Si cada componente tiene una distribución exponencial,
 
 $$
-\lambda_{\mathrm{sistema}}=\sum_i \lambda_i,\qquad
-\mathrm{MTTF}_{\mathrm{sistema}}=\frac{1}{\lambda_{\mathrm{sistema}}}
+R_i(t)=e^{-\lambda_i t}
+$$
+
+entonces:
+
+$$
+R_{\mathrm{s}}(t)=\prod_i e^{-\lambda_i t}
+=e^{-\left(\sum_i\lambda_i\right)t}
+$$
+
+$$
+\lambda_{\mathrm{s}}=\sum_i\lambda_i,
+\qquad
+\mathrm{MTTF}_{\mathrm{s}}=\frac{1}{\sum_i\lambda_i}
+$$
+
+<div class="bridge">
+En serie, cualquiera de los componentes puede terminar la misión. Por eso sus tasas de falla se acumulan.
+</div>
+
+---
+
+## MTTF paralelo: dos componentes
+
+Considere dos componentes idénticos, independientes, activos y exponenciales. Cada componente tiene:
+
+$$
+R(t)=e^{-\lambda t},
+\qquad
+F(t)=1-e^{-\lambda t}
+$$
+
+Como el sistema paralelo falla solo cuando fallan ambos:
+
+$$
+F_{\mathrm{s}}(t)=[1-e^{-\lambda t}]^2
+$$
+
+Por complemento y expansión:
+
+$$
+R_{\mathrm{s}}(t)=1-[1-e^{-\lambda t}]^2
+=2e^{-\lambda t}-e^{-2\lambda t}
 $$
 
 ---
 
-## MTTF con RBD: caso paralelo
+## MTTF paralelo: dos componentes
 
-Considere $n$ componentes idénticos, independientes, activos y exponenciales, cada uno con tasa $\lambda$. El sistema falla cuando fallan todas las ramas:
-
-$$
-R_{\mathrm{sistema}}(t)=1-[1-e^{-\lambda t}]^n
-$$
-
-Si $\mathrm{MTTF}_{\mathrm{componente}}=1/\lambda$ y $H_n$ es el número armónico:
+Integramos la confiabilidad obtenida desde el RBD:
 
 $$
-\mathrm{MTTF}_{\mathrm{sistema}}
-=\int_0^\infty R_{\mathrm{sistema}}(t)\,dt
-=\frac{H_n}{\lambda}
-=H_n\,\mathrm{MTTF}_{\mathrm{componente}},
-\qquad
-H_n=\sum_{i=1}^{n}\frac{1}{i}
-$$
-
-Para $n=2$:
-
-$$
-R_{\mathrm{sistema}}(t)=2e^{-\lambda t}-e^{-2\lambda t}
-$$
-
-$$
-\mathrm{MTTF}_{\mathrm{sistema}}
+\mathrm{MTTF}_{\mathrm{s}}
+=\int_0^\infty R_{\mathrm{s}}(t)\,dt
 =\frac{2}{\lambda}-\frac{1}{2\lambda}
-=1.5\,\mathrm{MTTF}_{\mathrm{componente}}
+=\frac{3}{2\lambda}
 $$
+
+Como $\mathrm{MTTF}_{\mathrm{comp}}=1/\lambda$:
+
+$$
+\mathrm{MTTF}_{\mathrm{s}}=1.5\,\mathrm{MTTF}_{\mathrm{comp}}
+$$
+
+<div class="callout">
+Cada componente sigue teniendo el mismo MTTF individual. El sistema dura más porque puede continuar funcionando después de la primera falla.
+</div>
 
 <div class="small">
 El MTTF cuantifica tiempo esperado. No reemplaza la confiabilidad requerida para una misión específica.
@@ -548,47 +754,238 @@ El MTTF cuantifica tiempo esperado. No reemplaza la confiabilidad requerida para
 
 ---
 
-## Sistema $k$ de $n$
+## MTTF paralelo: verlo por etapas
 
-El paralelo es el caso "al menos uno". Un sistema $k$ de $n$ generaliza esa lógica. Funciona cuando al menos $k$ de sus $n$ componentes idénticos e independientes funcionan.
+El mismo resultado se entiende siguiendo el proceso de fallas:
 
-Si cada componente tiene confiabilidad $R(t)$, se suman los casos mutuamente excluyentes de exactamente $k$, $k+1$, ..., $n$ componentes operativos:
+**2 operativos** $\xrightarrow{1/(2\lambda)}$ **1 operativo**
 
-$$
-R_{k|n}(t)=\sum_{j=k}^{n}\binom{n}{j}
-[R(t)]^j[1-R(t)]^{n-j}
-$$
-
-Ejemplos: $1$ de $n$ es paralelo. $n$ de $n$ es serie. $2$ de $3$ es redundancia modular triple.
-
----
-
-## Redundancia modular triple (TMR) con votador imperfecto
-
-La TMR es el caso $2$ de $3$. El votador acepta la salida de la mayoría. Por eso se suman los casos de exactamente dos módulos correctos y de tres módulos correctos:
+**1 operativo** $\xrightarrow{1/\lambda}$ **0 operativos: falla del sistema**
 
 $$
-R_{2|3}(t)=3R(t)^2[1-R(t)]+R(t)^3
-=3R(t)^2-2R(t)^3
+\mathrm{MTTF}_{\mathrm{s}}
+=\frac{1}{2\lambda}+\frac{1}{\lambda}
+=\frac{1.5}{\lambda}
 $$
 
-Si el votador independiente tiene confiabilidad $R_v(t)$:
-
-$$
-R_{\mathrm{TMR}}(t)=R_v(t)\,[3R(t)^2-2R(t)^3]
-$$
-
-Con un votador perfecto, $R_{2|3}(t)>R(t)$ si y solo si $R(t)>0.5$. Con un votador imperfecto, se debe comparar $R_v(t)[3R(t)^2-2R(t)^3]$ con $R(t)$: la redundancia sólo conviene si el resultado total supera al módulo simple.
-
-<div class="warn">
-El modelo supone fallas independientes y que "funcionar" equivale a entregar una salida correcta. La redundancia no elimina componentes críticos. Un votador único continúa siendo un punto único de falla.
+<div class="bridge">
+El MTTF total es la suma del tiempo esperado que el sistema pasa en cada etapa antes de perder la última rama operativa.
 </div>
 
 ---
 
-## Componentes no idénticos en un sistema $2$ de $3$
+## MTTF paralelo: generalización a $n$ componentes
 
-Cuando los módulos no tienen la misma confiabilidad ya no basta una distribución binomial única. Se mantienen, sin embargo, los mismos casos mutuamente excluyentes de exactamente dos y de tres éxitos:
+Si quedan $k$ componentes funcionando, hay $k$ componentes que pueden fallar:
+
+$$
+\text{tasa de la pr\'oxima falla}=k\lambda,
+\qquad
+E[T_k]=\frac{1}{k\lambda}
+$$
+
+Sumando las etapas desde $n$ hasta 1 operativo:
+
+$$
+\mathrm{MTTF}_{\mathrm{s}}
+=\frac{1}{n\lambda}+\frac{1}{(n-1)\lambda}+\cdots+\frac{1}{2\lambda}+\frac{1}{\lambda}
+$$
+
+---
+
+## MTTF paralelo: generalización a $n$ componentes
+
+Reordenando la suma:
+
+$$
+\mathrm{MTTF}_{\mathrm{s}}
+=\frac{1}{\lambda}\left(1+\frac12+\frac13+\cdots+\frac1n\right)
+=\frac{H_n}{\lambda},
+\qquad
+H_n=\sum_{k=1}^{n}\frac1k
+$$
+
+Donde $H_n$ representa el $n$-ésimo [número armónico](https://es.wikipedia.org/wiki/N%C3%BAmero_arm%C3%B3nico).
+
+Cada término $1/k$ representa el tiempo relativo que el sistema pasa en la etapa donde quedan $k$ componentes operativos.
+
+---
+
+## Ejemplo: tres componentes en paralelo
+
+Para $n=3$, el MTTF suma las tres etapas:
+
+$$
+\mathrm{MTTF}_{\mathrm{s}}
+=\frac{1}{3\lambda}+\frac{1}{2\lambda}+\frac{1}{\lambda}
+$$
+
+- $1/(3\lambda)$: tiempo medio con 3 componentes.
+- $1/(2\lambda)$: tiempo medio con 2 componentes.
+- $1/\lambda$: tiempo medio con 1 componente.
+
+$$
+H_3=1+\frac12+\frac13\approx1.83,
+\qquad
+\mathrm{MTTF}_{\mathrm{s}}\approx1.83\,\mathrm{MTTF}_{\mathrm{comp}}
+$$
+
+---
+
+<!-- _class: mttf-table -->
+
+## La redundancia mejora el MTTF, con beneficio decreciente
+
+| $n$ | $H_n$ |
+|---:|---:|
+| 1 | 1.00 |
+| 2 | 1.50 |
+| 3 | 1.83 |
+| 4 | 2.08 |
+
+<div class="callout">
+Agregar redundancia aumenta el MTTF, pero cada componente adicional aporta menos que el anterior.
+</div>
+
+---
+
+## Sistema $k$ de $n$: una condición de umbral
+
+Un sistema $k$ de $n$ funciona cuando al menos $k$ de sus $n$ componentes están operativos.
+
+<div class="callout">
+El sistema no exige componentes específicos. Exige que al menos k de los n estén operativos.
+</div>
+
+Los casos límite conectan con lo conocido: $1$ de $n$ es paralelo, $n$ de $n$ es serie y $2$ de $3$ es TMR.
+
+---
+
+## Ejemplo visual: un sistema $3$ de $5$
+
+<img class="diagram" src="images/sistema-3-de-5.png" alt="Cinco módulos equivalentes conectados a una lógica de umbral 3 de 5">
+
+<div class="small">
+La salida está disponible si funcionan al menos 3 de los 5 módulos.
+</div>
+
+---
+
+## Confiabilidad de un sistema $k$ de $n$
+
+Si los componentes son idénticos e independientes, se suman los escenarios con $k$, $k+1$, hasta $n$ componentes operativos:
+
+$$
+R_{k|n}(t)=\sum_{j=k}^{n}\binom{n}{j}[R(t)]^j[1-R(t)]^{n-j}
+$$
+
+Cada término cuenta una cantidad posible de componentes que mantiene la función del sistema.
+
+---
+
+## Redundancia modular triple (TMR)
+
+La redundancia modular triple, o TMR, es un sistema $2$ de $3$. Funciona cuando al menos dos módulos entregan el resultado correcto.
+
+El votador compara las tres salidas y entrega la señal que coincide en al menos dos módulos.
+
+<div class="callout">
+La TMR sigue funcionando después de una falla porque todavía quedan dos módulos que pueden formar mayoría.
+</div>
+
+---
+
+## TMR: tres módulos y un votador
+
+<img class="diagram" src="images/tmr-votador.png" alt="Tres módulos independientes conectados a un votador y una salida">
+
+<div class="small">
+El votador combina las tres salidas y entrega la señal que coincide en al menos dos módulos.
+</div>
+
+---
+
+<!-- _class: tmr-cases-slide -->
+
+## TMR: exactamente dos módulos funcionan
+
+Suponga tres módulos idénticos e independientes, cada uno con confiabilidad $R(t)$.
+
+<div class="tmr-cases">
+<div class="tmr-case"><strong>Falla el módulo 1</strong><br>Operan 2 y 3</div>
+<div class="tmr-case"><strong>Falla el módulo 2</strong><br>Operan 1 y 3</div>
+<div class="tmr-case"><strong>Falla el módulo 3</strong><br>Operan 1 y 2</div>
+</div>
+
+Cada caso tiene probabilidad $R(t)^2[1-R(t)]$. Los tres casos son disjuntos.
+
+El factor $3$ aparece porque hay tres formas de elegir cuál módulo falla:
+
+$$
+\binom{3}{2}=3
+$$
+
+Por lo tanto:
+
+$$
+P(\text{exactamente 2 funcionan})=3R(t)^2[1-R(t)]
+$$
+
+---
+
+<!-- _class: tmr-sum -->
+
+## TMR: sumar los escenarios de éxito
+
+La TMR funciona si exactamente dos módulos funcionan o si funcionan los tres.
+
+Ya obtuvimos:
+
+$$
+P(\text{exactamente 2 funcionan})=3R(t)^2[1-R(t)]
+$$
+
+Si funcionan los tres módulos:
+
+$$
+P(3\text{ funcionan})=R(t)^3
+$$
+
+Como ambos escenarios permiten que la TMR funcione:
+
+$$
+R_{2|3}(t)=3R(t)^2[1-R(t)]+R(t)^3
+$$
+
+Finalmente:
+
+$$
+R_{2|3}(t)=3R(t)^2-2R(t)^3
+$$
+
+<div class="callout">
+La TMR tolera una falla: puede operar con cualquiera de los tres módulos fallado, y también cuando los tres están correctos.
+</div>
+
+---
+
+## TMR: Votador imperfecto
+
+Si el votador tiene confiabilidad $R_v(t)$, también debe funcionar:
+
+$$
+R_{\mathrm{TMR}}(t)=R_v(t)[3R(t)^2-2R(t)^3]
+$$
+
+<div class="warn">
+La redundancia de los módulos no protege frente a la falla del votador.
+</div>
+
+---
+
+## TMR: Componentes no idénticos
+
+Ya no existe una única $R(t)$ ni puede utilizarse directamente la fórmula binomial. Se enumeran los mismos escenarios de éxito:
 
 $$
 \begin{aligned}
@@ -597,65 +994,84 @@ R_{2|3}={}&R_1R_2(1-R_3)+R_1R_3(1-R_2)\\
 \end{aligned}
 $$
 
-Al simplificar:
+---
+
+## Componentes no idénticos: expresión simplificada
+
+Al desarrollar y agrupar los mismos cuatro escenarios:
 
 $$
 R_{2|3}=R_1R_2+R_1R_3+R_2R_3-2R_1R_2R_3
 $$
 
----
-
-## Condicionamiento: sistemas no reducibles
-
-Las reducciones serie y paralelo dejan de bastar cuando las ramas se cruzan. Considere la red puente de cinco componentes, donde el componente $3$ conecta las dos ramas:
-
-```text
-Entrada ──[1]──●──[2]── Salida
-                │
-               [3]
-                │
-Entrada ──[4]──●──[5]── Salida
-```
-
-El estado de $C_3$ divide todos los escenarios posibles en dos casos disjuntos y exhaustivos. Al fijarlo como operativo o fallado, cada caso sí se vuelve serie y paralelo:
-
-| Estado de $C_3$ | RBD reducido | Confiabilidad condicionada |
-|---|---|---|
-| Fallado | $[1]-[2]$ en paralelo con $[4]-[5]$ | $R_{S\mid C^c}=1-(1-R_1R_2)(1-R_4R_5)$ |
-| Operativo | $[1]\parallel[4]$ en serie con $[2]\parallel[5]$ | $R_{S\mid C}=[1-(1-R_1)(1-R_4)][1-(1-R_2)(1-R_5)]$ |
+La lógica de mayoría se mantiene. Solo cambia la confiabilidad de cada módulo.
 
 ---
 
-## Puente: combinación de los casos
+## Red puente: la rama central impide reducir de una vez
 
-En las expresiones siguientes, $C$ denota el evento "$C_3$ funciona". La probabilidad total pondera la confiabilidad de cada RBD reducido por la probabilidad de su condición:
+Las ramas superior e inferior se cruzan mediante $C_3$. Por eso la red no es directamente serie ni paralelo.
 
-$$
-R_{\mathrm{s}}=P(S\mid C)P(C)+P(S\mid C^c)P(C^c)
-$$
-
-$$
-R_{\mathrm{s}}=R_C\,R_{\mathrm{s}\mid C}
-+(1-R_C)R_{\mathrm{s}\mid C^c}
-$$
-
-- Si $C$ funciona, reemplácelo por una conexión perfecta.
-- Si $C$ falla, elimínelo.
-- Reduzca los dos RBD resultantes.
-
-El mejor componente para condicionar es el que simplifica ambos casos. La enumeración de los $2^n$ estados puede verificar redes pequeñas, pero crece rápidamente. El condicionamiento evita esa explosión al resolver subproblemas serie y paralelo.
+<img class="diagram" src="images/red-puente.png" alt="Red puente con C1 y C2 arriba, C4 y C5 abajo, y C3 entre los nodos centrales">
 
 ---
 
-## Conjuntos mínimos de camino y de corte
+## Si $C_3$ falla, quedan dos ramas serie en paralelo
 
-- Un **conjunto mínimo de camino** reúne los componentes cuya operación conjunta garantiza un camino de éxito entre la entrada y la salida.
-- Un **conjunto mínimo de corte** reúne los componentes cuya falla conjunta provoca la falla del sistema.
+<img class="diagram-small" src="images/red-puente-c3-fallado.png" alt="Red puente reducida con C3 fallado">
 
-Estas representaciones resumen la misma lógica desde dos miradas: caminos para el éxito y cortes para la falla. Preparan la transición al árbol de fallas de la siguiente sección.
+$$
+R_{S\mid C^c}=1-(1-R_1R_2)(1-R_4R_5)
+$$
+
+---
+
+## Si $C_3$ funciona, la conexión central es perfecta
+
+<img class="diagram-small" src="images/red-puente-c3-operativo.png" alt="Red puente reducida con C3 reemplazado por una conexión perfecta">
+
+$$
+R_{S\mid C}
+=[1-(1-R_1)(1-R_4)]
+[1-(1-R_2)(1-R_5)]
+$$
+
+---
+
+## Condicionamiento: combinar los dos casos
+
+Se pondera cada red reducida por la probabilidad del estado de $C_3$:
+
+$$
+R_s=R_C R_{S\mid C}+(1-R_C)R_{S\mid C^c}
+$$
+
+<div class="bridge">
+Dividimos una red difícil en dos casos simples. Así evitamos enumerar todos los estados de la red completa.
+</div>
+
+---
+
+## Camino mínimo: una ruta que garantiza el éxito
+
+<img class="diagram-small" src="images/camino-minimo.png" alt="Camino mínimo formado por los componentes A y B resaltados en verde">
+
+Un **camino mínimo** es un conjunto mínimo de componentes operativos que garantiza el funcionamiento. En el ejemplo, el camino resaltado es $\{A,B\}$.
+
+<div class="callout">
+Si se elimina cualquier componente del conjunto, deja de garantizar el éxito.
+</div>
+
+---
+
+## Corte mínimo: una combinación de fallas
+
+<img class="diagram-small" src="images/corte-minimo.png" alt="Corte mínimo formado por los componentes B y C resaltados en naranja">
+
+Un **corte mínimo** es un conjunto mínimo de componentes cuya falla provoca la falla del sistema. En el ejemplo, el corte resaltado es $\{B,C\}$.
 
 <div class="warn">
-Si los caminos o cortes comparten componentes, sus eventos no son independientes y no se deben multiplicar directamente. Use condicionamiento, inclusión y exclusión u otro método que trate la dependencia.
+Si se elimina cualquier componente del conjunto, deja de garantizar la falla. Los caminos describen el éxito y los cortes describen la falla. Esta segunda mirada conduce al árbol de fallas.
 </div>
 
 ---
@@ -791,4 +1207,5 @@ Los RBD transforman confiabilidades individuales en confiabilidad de sistema. La
 
 - K. S. Trivedi y A. Bobbio, *Reliability and Availability Engineering: Modeling, Analysis, and Applications*, Cambridge University Press, 2017, caps. 4 y 6.
 - K. S. Trivedi, *Probability and Statistics with Reliability, Queuing, and Computer Science Applications*, 2.ª ed., Wiley, 2002, cap. 4.
+- [Número armónico](https://es.wikipedia.org/wiki/N%C3%BAmero_arm%C3%B3nico), Wikipedia en español.
 - J. M. Martínez, *TEL211: Reliability Block Diagrams*, material histórico USM.
